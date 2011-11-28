@@ -152,7 +152,9 @@ function migrate100_200(object) {
           'template_teaser',
           'template_full',
           'template_location']).each(function(t) {
-            object.interactivity[t] = formatterToTemplate(object.interactivity[t]);
+            if (object.interactivity[t]) {
+                object.interactivity[t] = formatterToTemplate(object.interactivity[t]);
+            }
         });
     }
     return object;
@@ -188,7 +190,11 @@ function loadProject(model, callback) {
         }
     },
     function(err, stylesheets) {
-        if (err) throw err;
+        if (err && err.code === 'ENOENT') {
+            stylesheets = _(stylesheets).compact();
+        } else if (err) {
+            return this(err);
+        }
 
         // Embed stylesheet contents at the `Stylesheet` key.
         object.Stylesheet = _(stylesheets).map(function(file) {
