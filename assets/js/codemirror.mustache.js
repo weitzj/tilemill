@@ -1,14 +1,18 @@
-CodeMirror.defineMode("mustache", function(config, parserConfig) {
+CodeMirror.defineMode('mustache', function(config, parserConfig) {
   var mustacheOverlay = {
     token: function(stream, state) {
-      if (stream.match("{{")) {
+      if (stream.match('{{{')) {
         while ((ch = stream.next()) != null)
-          if (ch == "}" && stream.next() == "}") break;
-        return "mustache";
+          if (ch == '}' && stream.next() == '}' && stream.next() == '}') break;
+        return 'mustache';
+      } else if (stream.match('{{')) {
+        while ((ch = stream.next()) != null)
+          if (ch == '}' && stream.next() == '}') break;
+        return 'mustache';
       }
-      while (stream.next() != null && !stream.match("{{", false)) {}
+      while (stream.next() != null && !stream.match('{{', false)) {}
       return null;
     }
   };
-  return CodeMirror.overlayParser(CodeMirror.getMode(config, parserConfig.backdrop || "text/html"), mustacheOverlay);
+  return CodeMirror.overlayParser(CodeMirror.getMode(config, parserConfig.backdrop || 'text/html'), mustacheOverlay);
 });

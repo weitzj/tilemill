@@ -3,24 +3,18 @@ view = Backbone.View.extend();
 view.prototype.events = {
     'click input[type=submit]': 'save',
     'change select[name=layer]': 'attach',
+    'click a[href=#settingsTooltips]': 'refresh',
     'keyup input[name=template_location]': 'preview',
-    'keyup textarea[name=template_teaser]': 'preview',
-    'keyup textarea[name=template_full]': 'preview',
     'focus input[name=template_location]': 'preview',
-    'focus textarea[name=template_teaser]': 'preview',
-    'focus textarea[name=template_full]': 'preview',
-    'blur textarea[name=template_teaser]': 'collapse',
-    'blur textarea[name=template_full]': 'collapse'
 };
 
 view.prototype.initialize = function(options) {
-    _(this).bindAll('render', 'save', 'attach', 'zoom', 'preview', 'collapse');
+    _(this).bindAll('render', 'save', 'attach', 'zoom', 'preview', 'refresh');
     this.render().attach();
 };
 
 view.prototype.preview = function(ev) {
     var target = $(ev.currentTarget);
-    target.addClass('expand');
     var format = target.attr('name').split('template_').pop();
     var feature = this.datasource.get('features')[0];
     try {
@@ -31,10 +25,9 @@ view.prototype.preview = function(ev) {
     }
 };
 
-view.prototype.collapse = function(ev) {
-    var target = $(ev.currentTarget);
-    target.removeClass('expand');
-    target.siblings('.preview').html('');
+view.prototype.refresh = function() {
+    this.mirror_teaser.refresh();
+    this.mirror_full.refresh();
 };
 
 view.prototype.render = function() {
@@ -51,10 +44,6 @@ view.prototype.render = function() {
     // Focus name field for unnamed projects.
     if (!this.model.get('name')) this.$('input[type=text]:first').focus();
 
-    var template_location_mirror = CodeMirror(this.$('input[name=template_location]').get(0), {
-        lineNumbers: true,
-        mode: "mustache"
-    });
     return this;
 };
 
@@ -72,11 +61,10 @@ view.prototype.save = function() {
         'format':        this.$('select[name=format]').val(),
         'minzoom':       parseInt(this.$('.slider').slider('values', 0)),
         'maxzoom':       parseInt(this.$('.slider').slider('values', 1)),
-        'interactivity': this.$('select[name=layer]').val() ?
-            {
+        'interactivity': this.$('select[name=layer]').val() ? {
                 'layer': this.$('select[name=layer]').val(),
-                'template_teaser': this.$('textarea[name=template_teaser]').val(),
-                'template_full': this.$('textarea[name=template_full]').val(),
+                'template_teaser': this.mirror_teaser.getVal(),
+                'template_full': this.mirror_full.getVal(),
                 'template_location': this.$('input[name=template_location]').val(),
             } :
             false,
@@ -129,7 +117,41 @@ view.prototype.attach = function() {
         }).join(' '));
 
         this.$('.dependent').show();
+
+        this.mirrorChange = _(function(ed) {
+            var val = ed.getValue(),
+                feature = this.datasource.get('features')[0];
+            try {
+                $(ed.getWrapperElement()).parent().siblings('.preview').html(
+                    wax.template(val).format(false, feature));
+            } catch(err) {
+                $(ed.getWrapperElement()).parent().siblings('.preview').html(err.toString());
+            }
+        }).bind(this);
+
         $('#popup').removeClass('loading');
+
+        if (this.mirror_teaser) {
+            this.mirror_teaser.refresh();
+        } else {
+            this.mirror_teaser = CodeMirror.fromTextArea(
+                this.$('textarea[name=template_teaser]').get(0), {
+                onChange: this.mirrorChange,
+                onFocus: this.mirrorChange,
+                mode: 'mustache'
+            });
+        }
+
+        if (this.mirror_full) {
+            this.mirror_full.refresh();
+        } else {
+            this.mirror_full = CodeMirror.fromTextArea(
+                this.$('textarea[name=template_full]').get(0), {
+                onChange: this.mirrorChange,
+                onFocus: this.mirrorChange,
+                mode: 'mustache'
+            });
+        }
     }).bind(this);
 
     // Cache the datasource model to `this.datasource` so it can
