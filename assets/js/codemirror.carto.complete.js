@@ -5,11 +5,14 @@
 
     function cartoCompletion(editor, reference) {
         var widget = document.createElement('div'),
-            sel = widget.appendChild(document.createElement('select')),
+            sel = widget.appendChild(document.createElement('div')),
+            $fake = $(document.createElement('input')),
             ids = [],
             classes = [],
             $widget = $(widget),
             $sel = $(sel);
+
+        $fake.appendTo(widget).hide();
 
         function cancelEvent(e) {
             if (!e) return;
@@ -25,10 +28,13 @@
             var ids = [];
             for (var i in reference.symbolizers) {
                 for (var j in reference.symbolizers[i]) {
-                    ids.push(reference.symbolizers[i][j].css);
+                    ids.push({
+                        doc: reference.symbolizers[i][j].doc || '',
+                        val: reference.symbolizers[i][j].css
+                    });
                 }
             }
-            return _.uniq(ids);
+            return ids;
         })(reference);
 
         var valid_keywords = [];
@@ -80,7 +86,11 @@
             }
 
             return _.filter(against, function(i) {
-                return i.indexOf(token.string) === 0;
+                if (typeof i === 'string') {
+                    return i.indexOf(token.string) === 0;
+                } else {
+                    return i.val.indexOf(token.string) === 0;
+                }
             }).map(function(i) {
                 if (token.className === 'carto-value') {
                     return i + ';';
@@ -89,9 +99,15 @@
                 } else if (token.className === 'carto-selector') {
                     return i + ' {';
                 } else {
-                    return i + ':';
+                    return i.val + ': <span>' + i.doc + '</span>';
                 }
             });
+        }
+
+        function highlight(n) {
+            for (var i = 0; i < sel.childNodes.length; i++) {
+                sel.childNodes[i].className = (n == i) ? 'selected' : '';
+            }
         }
 
         function complete(e) {
@@ -103,6 +119,7 @@
 
             var cur = editor.getCursor(false),
                 token = editor.getTokenAt(cur),
+                index = 0,
                 done = false;
 
             // If this is not on a token that's autocompletable,
@@ -157,14 +174,14 @@
             var pos = editor.cursorCoords();
 
             sel.innerHTML = '';
-            sel.multiple = true;
+            var completions_size = Math.min(completions.length, 10);
+
             for (var i = 0; i < Math.min(completions.length, 10); ++i) {
-                var opt = sel.appendChild(document.createElement('option'));
-                opt.appendChild(document.createTextNode(completions[i]));
+                var opt = sel.appendChild(document.createElement('div'));
+                opt.className = 'completions-option';
+                opt.innerHTML = completions[i];
             }
-            sel.firstChild.selected = true;
-            sel.selectedIndex = 0;
-            sel.size = Math.min(10, completions.length);
+
             sel.style.height = '100px';
 
             widget.className = 'completions';
@@ -173,15 +190,11 @@
             widget.style.left = pos.x + 'px';
             widget.style.top = pos.yBot + 'px';
 
+            highlight(index);
+
             document.body.appendChild(widget);
 
-            // Hack to hide the scrollbar.
-            if (completions.length <= 10) {
-                widget.style.width = (sel.clientWidth - 1) + 'px';
-            }
-
-            $sel.blur(close);
-            $sel.keydown(function(event) {
+            $fake.keydown(function(event) {
                 var code = event.which;
                 // Enter and space
                 if (code === 13 || code === 32) {
@@ -190,13 +203,13 @@
                 // tab forwards
                 } else if (code === 9 && !event.shiftKey) {
                     cancelEvent(event);
-                    sel.selectedIndex = (++sel.selectedIndex % sel.size);
+                    highlight(++index % completions_size);
                 // shift-tab backwards
                 } else if (code === 9) {
                     cancelEvent(event);
-                    sel.selectedIndex = (--sel.selectedIndex === -1) ?
-                        sel.size - 1 :
-                        sel.selectedIndex;
+                    highlight((--index === -1) ?
+                        completions_size - 1 :
+                        index);
                 // Escape
                 } else if (code === 27) {
                     cancelEvent(event);
@@ -214,7 +227,7 @@
             });
 
             $sel.click(pick);
-            $sel.focus();
+            $fake.focus();
 
             return true;
         }

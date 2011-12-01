@@ -1583,3 +1583,30 @@ tr:hover th,
   margin-left:20px;
   }
 
+.completions {
+  border-radius:3px;
+  border:1px solid #888;
+  overflow:hidden;
+  max-width:300px;
+  background:#fff;
+}
+
+.completions div {
+  padding:2px;
+  font-family: DroidSansMono,monospace;
+  font-size:11px;
+  line-height:16px;
+}
+
+.completions div.selected {
+  background:#476E91;
+  color:#fff;
+}
+
+.completions div span {
+  color:#aaa;
+}
+
+.completions div.selected span {
+  color:#fff;
+}
