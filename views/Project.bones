@@ -86,6 +86,7 @@ view.prototype.render = function(init) {
             interaction: wax.mm.interaction(this.map, this.model.attributes),
             legend: wax.mm.legend(this.map, this.model.attributes),
             zoombox: wax.mm.zoombox(this.map),
+            latlngtooltip: wax.mm.latlngtooltip(this.map),
             zoomer: wax.mm.zoomer(this.map).appendTo(this.map.parent),
             fullscreen: wax.mm.fullscreen(this.map).appendTo(this.map.parent)
         };

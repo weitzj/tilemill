@@ -39,6 +39,14 @@
   overflow:hidden;
   }
 
+.wax-latlngtooltip {
+  display:block;
+  padding:2px 5px;
+  background:#fff;
+  position:absolute;
+  border:1px solid #ccc;
+}
+
 .wax-tooltip .close:active,
 .wax-fullscreen:active,
 .zoomer:active {
