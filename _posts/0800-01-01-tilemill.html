@@ -28,61 +28,65 @@ platforms:
 ---
 
 <div id='hero' class='clearfix dark'>
-  <div class='pad4 col6 intro prose'>
-    <h1>Make beautiful interactive maps</h1>
-    <p>Whether you're a journalist, web designer, researcher,  or seasoned cartographer, TileMill is the design studio you need to create stunning interactive maps.</p>
-  </div>
-  <div class='col6 tilemill-screenshot'></div>
-  <div class='download callout col6 pad4 fill-navy-dark'>
-    <ul class='oslist clearfix'>
-    {% for item in page.platforms %}
-      <li id='{{item.id}}'><a href='#' class='button big'>{{item.name}}</a></li>
-    {% endfor %}
-    </ul>
-    {% for item in page.platforms %}
-    <a href='{{item.url}}' class='download-button clearfix {{item.id}}' title='{{item.name}}'>
-      <div class='label col5 pad1'>
-        <small>{{item.name}}</small>
-        <h3 class='label-title'>Download</h3>
-      </div>
-      <div class='details col7 pad1'>
-        <small class='filename'>{{item.file}}</small>
-        <h3 class='label-title'>{{item.size}}</h3>
-      </div>
-      <div class='instructions'><small><span class='arrow'></span>{{item.help}}</small></div>
-    </a>
-    {% endfor %}
+  <div class='col6'>
+    <div class='pad4 intro prose'>
+      <h1>Make beautiful interactive maps</h1>
+      <p>Whether you're a journalist, web designer, researcher,  or seasoned cartographer, TileMill is the design studio you need to create stunning interactive maps.</p>
+    </div>
+    <div class='download callout pad4 fill-navy-dark'>
+      <ul class='oslist clearfix'>
+      {% for item in page.platforms %}
+        <li id='{{item.id}}'><a href='#' class='button big'>{{item.name}}</a></li>
+      {% endfor %}
+      </ul>
+      {% for item in page.platforms %}
+      <a href='{{item.url}}' class='download-button clearfix {{item.id}}' title='{{item.name}}'>
+        <div class='label col5 pad1'>
+          <small>{{item.name}}</small>
+          <h3 class='label-title'>Download</h3>
+        </div>
+        <div class='details col7 pad1'>
+          <small class='filename'>{{item.file}}</small>
+          <h3 class='label-title'>{{item.size}}</h3>
+        </div>
+        <div class='instructions'><small><span class='arrow'></span>{{item.help}}</small></div>
+      </a>
+      {% endfor %}
 
-    <div class='mailchimp-subscribe col12 clearfix'>
-      <div class='col6 prose'>
-        <h3>Downloading&hellip;</h3>
-        <small>While you wait, check out the <a href='{{site.baseurl}}/docs/crashcourse/introduction'>TileMill Crash course</a>.
-        </small>
-      </div>
-      <div class='col6 prose'>
-        <h3>Newsletter</h3>
-        <small>For news &amp; updates subscribe now:</small>
-        <!-- Begin MailChimp Signup Form -->
-        <div id='mc-signup'>
-          <form action='http://mapbox.us2.list-manage1.com/subscribe/post?u=1b29ad842d113cece02035883&amp;id=6cbe531fd0' method='post' id='mc-embedded-subscribe-form' name='mc-embedded-subscribe-form' class='validate' target='_blank'>
-            <div class='mc-field-group clearfix'>
-              <input type='hidden' value='1' name='group[7417][2]'>
-              <div class='field-wrapper'><input type='text' value='' placeholder='Email Address' name='EMAIL' class='required email' id='mce-EMAIL'></div>
-              <input type='submit' value='Subscribe' name='subscribe' id='mc-embedded-subscribe' class='button icon mail'>
-            </div>
-            <div id='mce-responses'>
-              <div class='response' id='mce-error-response' style='display:none'></div>
-              <div class='response' id='mce-success-response' style='display:none'></div>
-            </div>
-          </form>
+      <div class='mailchimp-subscribe col12 clearfix'>
+        <div class='col6 prose'>
+          <h3>Downloading&hellip;</h3>
+          <small>While you wait, check out the <a href='{{site.baseurl}}/docs/crashcourse/introduction'>TileMill Crash course</a>.
+          </small>
+        </div>
+        <div class='col6 prose'>
+          <h3>Newsletter</h3>
+          <small>For news &amp; updates subscribe now:</small>
+          <!-- Begin MailChimp Signup Form -->
+          <div id='mc-signup'>
+            <form action='http://mapbox.us2.list-manage1.com/subscribe/post?u=1b29ad842d113cece02035883&amp;id=6cbe531fd0' method='post' id='mc-embedded-subscribe-form' name='mc-embedded-subscribe-form' class='validate' target='_blank'>
+              <div class='mc-field-group clearfix'>
+                <input type='hidden' value='1' name='group[7417][2]'>
+                <div class='field-wrapper'><input type='text' value='' placeholder='Email Address' name='EMAIL' class='required email' id='mce-EMAIL'></div>
+                <input type='submit' value='Subscribe' name='subscribe' id='mc-embedded-subscribe' class='button icon mail'>
+              </div>
+              <div id='mce-responses'>
+                <div class='response' id='mce-error-response' style='display:none'></div>
+                <div class='response' id='mce-success-response' style='display:none'></div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
+
+      <small class='links'>
+        <a href='{{site.baseurl}}/docs/upgrade/'>Upgrade notes</a> | <a href='{{site.baseurl}}/changelog/'>Changelog</a>  | <a href='{{site.baseurl}}/docs/install/'>More install details</a>
+      </small>
+
     </div>
-
-    <small class='links'>
-      <a href='{{site.baseurl}}/docs/upgrade/'>Upgrade notes</a> | <a href='{{site.baseurl}}/changelog/'>Changelog</a>  | <a href='{{site.baseurl}}/docs/install/'>More install details</a>
-    </small>
-
+  </div>
+  <div class='col6'>
+    <div class='tilemill-screenshot'></div>
   </div>
 </div>
 

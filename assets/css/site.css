@@ -22,8 +22,9 @@
 #hero { min-height:660px; }
 
 #hero .tilemill-screenshot {
-  background:url(../../img/hero-tilemill.png) 0 bottom no-repeat;
+  background:url(../../img/hero-tilemill.png) right no-repeat;
   height:660px;
+  width: 100%;
   float:right;
   -webkit-animation:fadeIn 500ms ease 1500ms both;
      -moz-animation:fadeIn 500ms ease 1500ms both;
