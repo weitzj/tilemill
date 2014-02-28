@@ -32,7 +32,7 @@
         "sax": "0.6.x",
         "request": "~2.34.0",
         "step": "~0.0.5",
-        "mapnik": "https://github.com/mapnik/node-mapnik/tarball/master",
+        "mapnik": "1.4.0-alpha",
         "tilelive": "~4.5.3",
         "mbtiles": "~0.2.9",
         "tilelive-mapnik": "https://github.com/mapbox/tilelive-mapnik/tarball/master",
@@ -59,7 +59,6 @@
         "topcube": "~0.2.0"
     },
     "scripts": {
-        "preinstall": "node ./configure.js",
         "start": "./index.js",
         "test": "mocha --timeout 100000",
         "postinstall": "node ./lib/gitutil.js"
