@@ -86,7 +86,7 @@ view.prototype.render = function() {
     ];
     var tj = _(this.project.attributes).clone();
     tj.minzoom = 0;
-    tj.maxzoom = 22;
+    tj.maxzoom = 30;
     this.map = new MM.Map('meta-map', new wax.mm.connector(tj));
 
     // Override project attributes to allow unbounded zooming.
@@ -99,10 +99,10 @@ view.prototype.render = function() {
 
     if (this.$('input[name=bounds]').size()) {
         this.boxselector = wax.mm.boxselector(this.map, {}, _(function(data) {
-            var s = _(data).chain().pluck('lat').min().value().toFixed(4);
-            var n = _(data).chain().pluck('lat').max().value().toFixed(4);
-            var w = _(data).chain().pluck('lon').min().value().toFixed(4) % 360;
-            var e = _(data).chain().pluck('lon').max().value().toFixed(4) % 360;
+            var s = _(data).chain().pluck('lat').min().value().toFixed(6);
+            var n = _(data).chain().pluck('lat').max().value().toFixed(6);
+            var w = _(data).chain().pluck('lon').min().value().toFixed(6) % 360;
+            var e = _(data).chain().pluck('lon').max().value().toFixed(6) % 360;
             if (w < -180) w += 360; else if (w > 180) w -= 360;
             if (e < -180) e += 360; else if (e > 180) e -= 360;
             this.$('input[name=bounds]').val([w,s,e,n].join(','));
@@ -115,19 +115,21 @@ view.prototype.render = function() {
         var first = true;
         this.pointselector = wax.mm.pointselector(this.map, {}, _(function(data) {
             var point = data.pop();
-            var x = point.lon.toFixed(4) % 360;
-            var y = point.lat.toFixed(4);
-            var z = first ? center[2] : this.map.getZoom();
-            if (x < -180) x += 360; else if (x > 180) x -= 360;
-            this.$('input[name=center]').val([x,y,z].join(','));
+            if (point) {
+                var x = point.lon.toFixed(6) % 360;
+                var y = point.lat.toFixed(6);
+                var z = first ? center[2] : this.map.getZoom();
+                if (x < -180) x += 360; else if (x > 180) x -= 360;
+                this.$('input[name=center]').val([x,y,z].join(','));
 
-            var loc = this.pointselector.locations();
-            while (loc.length > 1) {
-                this.pointselector.deleteLocation(loc[0]);
-                loc = this.pointselector.locations();
+                var loc = this.pointselector.locations();
+                while (loc.length > 1) {
+                    this.pointselector.deleteLocation(loc[0],true);
+                    loc = this.pointselector.locations();
+                }
+                $(loc[0].pointDiv).text('Z'+z);
+                first = false;
             }
-            $(loc[0].pointDiv).text('Z'+z);
-            first = false;
         }).bind(this));
         this.pointselector.addLocation(new MM.Location(center[1],center[0]));
     }
