@@ -52,12 +52,12 @@ model.prototype.schema = {
         'legend':      { 'type': 'string' },
         'minzoom': {
             'minimum': 0,
-            'maximum': 22,
+            'maximum': 26,
             'type': 'integer'
         },
         'maxzoom': {
             'minimum': 0,
-            'maximum': 22,
+            'maximum': 26,
             'type': 'integer'
         },
         'bounds': {
@@ -87,7 +87,7 @@ model.prototype.schema = {
                     'type':'number',
                     'minimum':-85.05112877980659,
                     'maximum':85.05112877980659 },
-                { 'type':'integer', 'minimum':0, 'maximum':22 }
+                { 'type':'integer', 'minimum':0, 'maximum':26 }
             ]
         },
 
