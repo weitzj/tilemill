@@ -79,6 +79,7 @@ command.prototype.initialize = function(plugin, callback) {
     this.child('tile');
 
     if (!plugin.config.server) plugin.children['core'].stderr.on('data', function(d) {
+        if (d.toString().match(/Started \[Server Core:\d+\]./)) console.log('start atom');
         if (!d.toString().match(/Started \[Server Core:\d+\]./)) return;
         var client;
         var options = {
