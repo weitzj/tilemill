@@ -1,11 +1,12 @@
 view = Backbone.View.extend();
 
 view.prototype.events = {
-    'click a.upload': 'upload'
+    'click a.upload': 'upload',
+    'click a.download': 'download'
 };
 
 view.prototype.initialize = function(options) {
-    _(this).bindAll('render');
+    _(this).bindAll('render', 'download');
 
     Bones.utils.fetch({
         preview: new models.Preview({id:this.model.get('filename')}),
@@ -61,3 +62,53 @@ view.prototype.upload = function(ev) {
     }));
     return false;
 };
+
+view.prototype.download = function(ev) {
+    ev.preventDefault();
+    if (typeof process === 'undefined') return;
+    if (typeof process.versions['atom-shell'] === undefined) return;
+    var uri = url.parse($(ev.currentTarget).attr('href'));
+        // Opening external URLs.
+    if (uri.hostname && uri.hostname !== 'localhost') {
+        shell.openExternal(ev.currentTarget.href);
+        return false;
+    }
+    // File saving.
+    var fileTypes = {
+        mbtiles: 'Tiles',
+        png: 'Image',
+        jpg: 'Image',
+        jpeg: 'Image',
+        tiff: 'Tiff',
+        webp: 'WebP',
+        pdf: 'PDF',
+        svg: 'SVG',
+        xml: 'Mapnik XML'
+    };
+
+    var typeExtension = (uri.pathname || '').split('.').pop().toLowerCase();
+    var typeLabel = fileTypes[typeExtension];
+
+    if (typeLabel) {
+        var filePath = remote.require('dialog').showSaveDialog({
+            title: 'Save ' + typeLabel,
+            defaultPath: '~/Untitled ' + typeLabel + '.' + typeExtension,
+            filters: [{
+                name: typeExtension.toUpperCase(),
+                extensions: [typeExtension]
+            }]
+        });
+        if (filePath) {
+            var writeStream = fs.createWriteStream(filePath);
+            var req = http.request(uri, function(res) {
+                if (res.statusCode !== 200) return;
+                res.pipe(writeStream);
+                writeStream.on('finish', function() {
+                    console.log('done');
+                });
+            });
+            req.end();
+        }
+        return false;
+    }
+}

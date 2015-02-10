@@ -1,6 +1,6 @@
 <div class='preview'>
   <ul class='form'><li class='text'>
-    <a class='button large' href='/export/download/<%=model.get('filename')%>'>
+    <a class='button large download' href='http://localhost:20009/export/download/<%=model.get('filename')%>'>
       <span class='icon reverse labeled export'></span>
       Save MBTiles
     </a>

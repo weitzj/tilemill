@@ -5,11 +5,28 @@
   <title>TileMill</title>
   <link rel='shortcut icon' href='/assets/tilemill/images/favicon.ico' type='image/x-icon' />
   <link rel='stylesheet' href='/assets/tilemill/css/vendor.css' type='text/css'/>
-  <script>window.require = undefined; window.module = undefined; window.process = undefined;</script>
+  <script>
+
+    window.atom = {
+        require: window.require
+    };
+
+    window.require = undefined;
+    window.module = undefined;
+    delete window.process.versions.node;
+
+    var remote = atom.require('remote');
+    var shell = atom.require('shell');
+    var http = atom.require('http');
+    var url = atom.require('url');
+    var fs = atom.require('fs');
+
+  </script>
   <script src='/assets/bones/all.js' type='text/javascript'></script>
   <script src='/assets/tilemill/js/vendor.js' type='text/javascript'></script>
   <script src='/assets/tilemill/js/abilities.js' type='text/javascript'></script>
   <script type='text/javascript'>$(Bones.start);</script>
+
   <meta name='viewport' content='user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0' />
   <% if (obj.profile) { %>
   <script type="text/javascript">

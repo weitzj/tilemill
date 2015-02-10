@@ -55,6 +55,7 @@ function makeWindow() {
     mainWindow = new BrowserWindow({
         width: 1260,
         height: 800,
+        center: true,
         'min-width': 720,
         'min-height': 480,
         title: 'TileMill',
@@ -189,20 +190,20 @@ function createMenu() {
         submenu: [
           {
             label: 'Online Resources',
-            click: function() { shell.openExternal('https://www.mapbox.com/mapbox-studio/'); }
+            click: function() { shell.openExternal('https://www.mapbox.com/tilemill/'); }
           },
           {
             label: 'Application Log',
             click: function() {
                 var cp = require("child_process");
-                cp.exec("open -a /Applications/Utilities/Console.app ~/.mapbox-studio/app.log");
+                cp.exec("open -a /Applications/Utilities/Console.app ~/.tilemill/app.log");
             }
           },
           {
             label: 'Shell Log',
             click: function() {
                 var cp = require("child_process");
-                cp.exec("open -a /Applications/Utilities/Console.app ~/.mapbox-studio/shell.log");
+                cp.exec("open -a /Applications/Utilities/Console.app ~/.tilemill/shell.log");
             }
           }
         ]
