@@ -103,12 +103,9 @@ view.prototype.download = function(ev) {
             var req = http.request(uri, function(res) {
                 if (res.statusCode !== 200) return;
                 res.pipe(writeStream);
-                writeStream.on('finish', function() {
-                    console.log('done');
-                });
             });
             req.end();
         }
         return false;
     }
-}
+};

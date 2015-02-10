@@ -62,6 +62,5 @@
 <div id='modal'></div>
 <div id='popup' class='pane scrolling'><%= this.Pane() %></div>
 <div class='mask'></div>
-
 </body>
 </html>
