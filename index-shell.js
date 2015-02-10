@@ -66,7 +66,7 @@ function makeWindow() {
             webaudio: false
         }
     });
-    mainWindow.loadUrl('file://' + path.join(__dirname, 'app', 'loading.html'));
+    mainWindow.loadUrl('file://' + path.join(__dirname, 'templates', 'loading.html'));
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {
         // Dereference the window object, usually you would store windows

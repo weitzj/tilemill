@@ -126,11 +126,9 @@ view.prototype.download = function(ev) {
                 extensions: [typeExtension]
             }]
         });
-        console.log(uri)
         if (filePath) {
             var writeStream = fs.createWriteStream(filePath);
             var req = http.request(uri, function(res) {
-            console.log(res)
                 if (res.statusCode !== 200) return;
                 res.pipe(writeStream);
             });
