@@ -17,7 +17,7 @@ if (process.platform === 'win32') {
     // skill shell.log setup
     shellsetup();
 } else {
-    var shellLog = path.join(process.env.HOME, '.mapbox-studio', 'shell.log');
+    var shellLog = path.join(process.env.HOME, '.tilemill', 'shell.log');
     shellsetup()
 }
 

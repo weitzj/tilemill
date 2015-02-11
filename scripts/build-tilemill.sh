@@ -22,7 +22,7 @@ fi
 
 NODE_VERSION="0.10.33"
 date_time=`date +%Y%m%d%H%M`
-ATOM_VERSION="0.21.1"
+ATOM_VERSION="0.21.2"
 
 atom_arch=$arch
 arch_common_name=$arch
@@ -57,36 +57,36 @@ fi
 
 echo "Building bundle in $build_dir"
 
-# if [ -d $build_dir ]; then
-#     echo "Build dir $build_dir already exists"
-#     exit 1
-# fi
+if [ -d $build_dir ]; then
+    echo "Build dir $build_dir already exists"
+    exit 1
+fi
 
-# echo "Downloading atom $shell_url"
-# curl -Lsfo $shell_file $shell_url
-# unzip -qq $shell_file -d $build_dir
-# rm $shell_file
+echo "Downloading atom $shell_url"
+curl -Lsfo $shell_file $shell_url
+unzip -qq $shell_file -d $build_dir
+rm $shell_file
 
-# echo "downloading studio"
-# git clone https://github.com/mapbox/tilemill.git $app_dir
-# cd $app_dir
-# git checkout $gitsha
+echo "downloading atom"
+git clone https://github.com/mapbox/tilemill.git $app_dir
+cd $app_dir
+git checkout atom
 # rm -rf $app_dir/.git
 
 echo "updating license"
 # Update LICENSE and version files from atom default.
 ver=$(node -e "var fs = require('fs'); console.log(JSON.parse(fs.readFileSync('$app_dir/package.json')).version);")
-# echo $ver > $build_dir/version
-# cp $app_dir/LICENSE.md $build_dir/LICENSE
-# mv $build_dir/version $build_dir/version.txt
-# mv $build_dir/LICENSE $build_dir/LICENSE.txt
+echo $ver > $build_dir/version
+cp $app_dir/LICENSE.md $build_dir/LICENSE
+mv $build_dir/version $build_dir/version.txt
+mv $build_dir/LICENSE $build_dir/LICENSE.txt
 
-# echo "running npm install"
-# BUILD_PLATFORM=$platform TARGET_ARCH=$arch npm install --production \
-# --target_platform=$platform \
-# --target=$NODE_VERSION \
-# --target_arch=$arch \
-# --fallback-to-build=false $extra_install_args
+echo "running npm install"
+BUILD_PLATFORM=$platform TARGET_ARCH=$arch npm install --production \
+--target_platform=$platform \
+--target=$NODE_VERSION \
+--target_arch=$arch \
+--fallback-to-build=false $extra_install_args
 
 
 cd /tmp
@@ -156,7 +156,7 @@ elif [ $platform == "darwin" ]; then
 
     # Test getting signing key.
     aws s3 cp "s3://mapbox/mapbox-studio/keys/Developer ID Certification Authority.cer" authority.cer
-    aws s3 cp "s3://mapbox/mapbox-studio/Developer ID Application: Mapbox, Inc. (GJZR2MEM28).cer" signing-key.cer
+    aws s3 cp "s3://mapbox/mapbox-studio/keys/Developer ID Application: Mapbox, Inc. (GJZR2MEM28).cer" signing-key.cer
     aws s3 cp "s3://mapbox/mapbox-studio/keys/Mac Developer ID Application: Mapbox, Inc..p12" signing-key.p12
     security create-keychain -p travis signing.keychain \
         && echo "+ signing keychain created"
