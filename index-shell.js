@@ -6,7 +6,7 @@ var Menu = require('menu');
 var shell = require('shell');
 var node = path.resolve(path.join(__dirname, 'vendor', 'node'));
 var exec = require('child_process').exec;
-var script = path.resolve(path.join(__dirname, 'index.js'));
+var script = path.resolve(path.join(__dirname, 'index-server.js'));
 var logger = require('fastlog')('', 'debug', '<${timestamp}>');
 var serverPort = 20009;
 var mainWindow = null;
@@ -28,12 +28,13 @@ function shellsetup(err){
 
     // Start the server child process.
     var server = spawn(node, [script]);
-    server.on('exit', process.exit);
+    server.on('exit', exit);
+
     server.stdout.once('data', function(data) {
         var matches = data.toString().match(/start atom/);
         if (matches) { loadURL(); }
-        if (!matches) { process.exit(1); }
-        logger.debug('TileMill @ http://localhost:'+serverPort+'/');
+        if (!matches) { exit(); }
+        logger.debug('TileMill @ http://localhost:' + serverPort + '/');
     });
 
     // Report crashes to our server.
@@ -53,17 +54,17 @@ function shellsetup(err){
 function makeWindow() {
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        width: 1260,
-        height: 800,
-        center: true,
+        'width': 1060,
+        'height': 700,
+        'center': true,
         'min-width': 720,
         'min-height': 480,
-        title: 'TileMill',
+        'title': 'TileMill',
         'node-integration': 'all',
         'web-preferences': {
-            webgl: true,
-            java: false,
-            webaudio: false
+            'webgl': true,
+            'java': false,
+            'webaudio': false
         }
     });
     mainWindow.loadUrl('file://' + path.join(__dirname, 'templates', 'loading.html'));

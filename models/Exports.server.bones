@@ -22,7 +22,7 @@ function start(id, callback) {
 
         var args = [];
         // tilemill index.js
-        args.push(path.resolve(path.join(__dirname, '../index.js')));
+        args.push(path.resolve(path.join(__dirname, '../index-server.js')));
         // export command
         args.push('export');
         // datasource

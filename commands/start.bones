@@ -79,7 +79,6 @@ command.prototype.initialize = function(plugin, callback) {
     this.child('tile');
 
     if (!plugin.config.server) plugin.children['core'].stderr.on('data', function(d) {
-        if (d.toString().match(/Started \[Server Core:\d+\]./)) console.log('start atom');
         if (!d.toString().match(/Started \[Server Core:\d+\]./)) return;
         var client;
         var options = {
@@ -94,21 +93,7 @@ command.prototype.initialize = function(plugin, callback) {
             'cache-path': path.join(process.env.HOME, '.tilemill/cache-cefclient'),
             'log-file': path.join(process.env.HOME, '.tilemill/cefclient.log')
         };
-        ubuntu_gui_workaround.check(function(needed) {
-            try {
-              if (needed) {
-                  client = ubuntu_gui_workaround.get_client(options);
-              } else {
-                  client = require('topcube')(options);
-              }
-              if (client) {
-                  console.warn('[tilemill] Client window created (pass --server=true to disable this)');
-                  plugin.children['client'] = client;
-              }
-            } catch (err) {
-              console.warn('[tilemill] Unable to open client window (' + err.message + ')');
-            }
-        });
+        if (d.toString().match(/Started \[Server Core:\d+\]./)) console.log('start atom');
     });
 
     callback && callback();
@@ -116,7 +101,7 @@ command.prototype.initialize = function(plugin, callback) {
 
 command.prototype.child = function(name) {
     Bones.plugin.children[name] = spawn(process.execPath, [
-        path.resolve(path.join(__dirname + '/../index.js')),
+        path.resolve(path.join(__dirname + '/../index-server.js')),
         name
     ].concat(args));
 
