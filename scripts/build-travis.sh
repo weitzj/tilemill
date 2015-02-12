@@ -13,12 +13,12 @@ if [ $PLATFORM == "linux" ] && [ -n "$GITSHA" ]; then
     sudo pip install -q awscli
     sudo curl -Lsf https://github.com/mapbox/windowsign/archive/v0.0.1.tar.gz | \
     sudo tar --strip 1 -xzf - --directory=/usr/local/bin "windowsign-0.0.1/windowsign"
-    ./scripts/build-atom.sh "$GITSHA" linux
-    ./scripts/build-atom.sh "$GITSHA" win32 x64
-    ./scripts/build-atom.sh "$GITSHA" win32 ia32
+    ./scripts/build-tilemill.sh "$GITSHA" linux
+    ./scripts/build-tilemill.sh "$GITSHA" win32 x64
+    ./scripts/build-tilemill.sh "$GITSHA" win32 ia32
 elif [ $PLATFORM == "darwin" ] && [ -n "$GITSHA" ]; then
     echo "Publishing $GITSHA"
     brew install python
     pip install -q awscli
-    ./scripts/build-atom.sh "$GITSHA" darwin
+    ./scripts/build-tilemill.sh "$GITSHA" darwin
 fi
