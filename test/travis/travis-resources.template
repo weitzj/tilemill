@@ -18,7 +18,8 @@
                                     ],
                                     "Effect": "Allow",
                                     "Resource": [
-                                        "arn:aws:s3:::mapbox/tilemill/*"
+                                        "arn:aws:s3:::mapbox/tilemill/*",
+                                        "arn:aws:s3:::mapbox/mapbox-studio/*"
                                     ]
                                 }
                             ]

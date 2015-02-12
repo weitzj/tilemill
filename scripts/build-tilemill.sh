@@ -118,8 +118,8 @@ if [ $platform == "win32" ]; then
         # alternative package for windows: no-installer / can be run from usb drive
         7z a -r -mx9 ${build_dir}.7z $(basename $build_dir) > /dev/null
         echo "uploading ${build_dir}.7z"
-        aws s3 cp --acl=public-read ${build_dir}.7z $s3dest
-        echo "Build at https://mapbox.s3.amazonaws.com/tilemill/$(basename ${build_dir}.7z)"
+        aws s3 cp --acl=public-read ${build_dir}.7z $s3dest/
+        echo "Build at https://mapbox.s3.amazonaws.com/tilemill/build/$(basename ${build_dir}.7z)"
     fi
 
     echo "running makensis"
@@ -142,8 +142,8 @@ if [ $platform == "win32" ]; then
     rm -f authenticode.spc
 
     echo "uploading $build_dir.exe"
-    aws s3 cp --acl=public-read $build_dir.exe $s3dest
-    echo "Build at https://mapbox.s3.amazonaws.com/tilemill/$(basename $build_dir.exe)"
+    aws s3 cp --acl=public-read $build_dir.exe $s3dest/
+    echo "Build at https://mapbox.s3.amazonaws.com/tilemill/build/$(basename $build_dir.exe)"
     rm -f $build_dir.exe
 # darwin: add app resources, zip up
 elif [ $platform == "darwin" ]; then
@@ -184,14 +184,14 @@ elif [ $platform == "darwin" ]; then
     ditto -c -k --sequesterRsrc --keepParent --zlibCompressionLevel 9 $(basename $build_dir) $build_dir.zip
 
     rm -rf $build_dir
-    aws s3 cp --acl=public-read $build_dir.zip $s3dest
+    aws s3 cp --acl=public-read $build_dir.zip $s3dest/
     echo "Build at $s3dest/$(basename $build_dir.zip)"
     rm -f $build_dir.zip
 # linux: zip up
 else
     zip -qr -9 $build_dir.zip $(basename $build_dir)
     rm -rf $build_dir
-    aws s3 cp --acl=public-read $build_dir.zip $s3dest
+    aws s3 cp --acl=public-read $build_dir.zip $s3dest/
     echo "Build at $s3dest/$(basename $build_dir.zip)"
     rm -f $build_dir.zip
 fi
