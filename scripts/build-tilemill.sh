@@ -20,6 +20,7 @@ else
     arch=$3
 fi
 
+s3dest="s3://mapbox/tilemill/build"
 NODE_VERSION="0.10.33"
 date_time=`date +%Y%m%d%H%M`
 ATOM_VERSION="0.21.2"
@@ -71,7 +72,7 @@ echo "downloading atom"
 git clone https://github.com/mapbox/tilemill.git $app_dir
 cd $app_dir
 git checkout atom
-# rm -rf $app_dir/.git
+rm -rf $app_dir/.git
 
 echo "updating license"
 # Update LICENSE and version files from atom default.
@@ -99,8 +100,8 @@ if [ $platform == "win32" ]; then
     if ! which windowsign > /dev/null; then echo "windowsign command not found"; exit 1; fi;
 
     # windows code signing
-    aws s3 cp s3://mapbox/tilemill/certs/authenticode.pvk authenticode.pvk
-    aws s3 cp s3://mapbox/tilemill/certs/authenticode.spc authenticode.spc
+    aws s3 cp s3://mapbox/mapbox-studio/certs/authenticode.pvk authenticode.pvk
+    aws s3 cp s3://mapbox/mapbox-studio/certs/authenticode.spc authenticode.spc
 
     echo "running windows signing on tilemill.exe"
     mv $build_dir/atom.exe $build_dir/tilemill.exe
@@ -117,7 +118,7 @@ if [ $platform == "win32" ]; then
         # alternative package for windows: no-installer / can be run from usb drive
         7z a -r -mx9 ${build_dir}.7z $(basename $build_dir) > /dev/null
         echo "uploading ${build_dir}.7z"
-        aws s3 cp --acl=public-read ${build_dir}.7z s3://mapbox/tilemill/
+        aws s3 cp --acl=public-read ${build_dir}.7z $s3dest
         echo "Build at https://mapbox.s3.amazonaws.com/tilemill/$(basename ${build_dir}.7z)"
     fi
 
@@ -141,7 +142,7 @@ if [ $platform == "win32" ]; then
     rm -f authenticode.spc
 
     echo "uploading $build_dir.exe"
-    aws s3 cp --acl=public-read $build_dir.exe s3://mapbox/tilemill/
+    aws s3 cp --acl=public-read $build_dir.exe $s3dest
     echo "Build at https://mapbox.s3.amazonaws.com/tilemill/$(basename $build_dir.exe)"
     rm -f $build_dir.exe
 # darwin: add app resources, zip up
@@ -184,14 +185,14 @@ elif [ $platform == "darwin" ]; then
 
     rm -rf $build_dir
     aws s3 cp --acl=public-read $build_dir.zip $s3dest
-    echo "Build at https://mapbox.s3.amazonaws.com/tilemill/$(basename $build_dir.zip)"
+    echo "Build at $s3dest/$(basename $build_dir.zip)"
     rm -f $build_dir.zip
 # linux: zip up
 else
     zip -qr -9 $build_dir.zip $(basename $build_dir)
     rm -rf $build_dir
     aws s3 cp --acl=public-read $build_dir.zip $s3dest
-    echo "Build at https://mapbox.s3.amazonaws.com/tilemill/$(basename $build_dir.zip)"
+    echo "Build at $s3dest/$(basename $build_dir.zip)"
     rm -f $build_dir.zip
 fi
 
@@ -199,7 +200,7 @@ if [ "$ver" ==  "$(echo $gitsha | tr -d v)" ]; then
     echo $ver > latest
     aws s3 cp --acl=public-read latest $s3dest/latest
     rm -f latest
-    echo "Latest build version at https://mapbox.s3.amazonaws.com/tilemill/latest"
+    echo "Latest build version at $s3dest/latest"
 fi
 
 cd $cwd

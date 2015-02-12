@@ -22,3 +22,7 @@ before_script:
 
 script:
  - npm test
+
+env:
+  global:
+  - secure: "AEuBUNlpZiNsocwK2Z40MJPhrVzZCzrhzvjn7M7xa8IBJtSPOeu4sMhxKvkwdMy2Ufu6llh5A/UeV5mefXcS3i+wuZijXkqdmRoiuHOo0Cx5FK6VN2/zGKKVQErFno/dlCap720yIChle5zHdgvxcAjIjA73f+z5KjGkIOKc4zM="
