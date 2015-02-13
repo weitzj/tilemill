@@ -2,7 +2,12 @@
 set -e -u
 
 git clone https://github.com/mapbox/mason.git ~/.mason
-sudo ln -s ~/.mason/mason /usr/local/bin/mason
+ln -s ~/.mason/mason /usr/local/bin/mason
+
+PLATFORM=$(uname -s | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/")
+if [ $PLATFORM == "linux" ]; then
+    - sudo apt-get install clang-3.3
+fi
 
 # setup config
 echo 'export PGDATA=$(pwd)/local-postgres' > mason-config.env
@@ -24,7 +29,7 @@ mkdir ${PGTEMP_DIR}
 mkdir ${PGHOST}
 
 # do once: initialize local db cluster
-./mason_packages/.link/bin/initdb
+sudo -H -u travis ./mason_packages/.link/bin/initdb -D $PGDATA
 sleep 2
 
 # do each time you use this local postgis:
