@@ -6,7 +6,7 @@ ln -s ~/.mason/mason /usr/local/bin/mason
 
 PLATFORM=$(uname -s | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/")
 if [ $PLATFORM == "linux" ]; then
-    - sudo apt-get install clang-3.3
+    sudo apt-get install clang-3.3
 fi
 
 # setup config
