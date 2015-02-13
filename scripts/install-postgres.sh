@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 set -e -u
 
-if [ ! -d ~/.mason ]; then
-    git clone https://github.com/mapbox/mason.git ~/.mason
-    sudo chown travis:travis /usr/local/bin
-    ln -s ~/.mason/mason /usr/local/bin/mason
-fi
+git clone https://github.com/mapbox/mason.git ~/.mason
 
 PLATFORM=$(uname -s | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/")
 if [ $PLATFORM == "linux" ]; then
+    sudo chown travis:travis /usr/local/bin
     sudo apt-get install clang-3.3
 fi
+
+ln -s ~/.mason/mason /usr/local/bin/mason
 
 # setup config
 echo 'export PGDATA=$(pwd)/local-postgres' > mason-config.env
