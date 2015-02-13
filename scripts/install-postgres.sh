@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 set -e -u
 
-git clone https://github.com/mapbox/mason.git ~/.mason
-whoami
-sudo chown travis:travis /usr/local/bin
-ln -s ~/.mason/mason /usr/local/bin/mason
+if [ ! -d ~/.mason ]; then
+    git clone https://github.com/mapbox/mason.git ~/.mason
+    sudo chown travis:travis /usr/local/bin
+    ln -s ~/.mason/mason /usr/local/bin/mason
+fi
 
 PLATFORM=$(uname -s | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/")
 if [ $PLATFORM == "linux" ]; then
@@ -47,9 +48,7 @@ psql postgres -c "SET temp_tablespaces TO 'temp_disk';"
 ./mason_packages/.link/bin/createdb template_postgis -T postgres
 psql template_postgis -c "CREATE EXTENSION postgis;"
 psql template_postgis -c "SELECT PostGIS_Full_Version();"
-
-# stop db when you are done
-# you'll only need the 'source' below if you run this from a new terminal
+ll only need the 'source' below if you run this from a new terminal
 
 # for more usage tips see the tests at:
 # https://github.com/mapbox/mason/blob/postgis-2.1.5/test.sh
