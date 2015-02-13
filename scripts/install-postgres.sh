@@ -29,7 +29,7 @@ mkdir ${PGTEMP_DIR}
 mkdir ${PGHOST}
 
 # do once: initialize local db cluster
-sudo -H -u travis ./mason_packages/.link/bin/initdb -D $PGDATA
+./mason_packages/.link/bin/initdb -D $PGDATA
 sleep 2
 
 # do each time you use this local postgis:
@@ -38,13 +38,13 @@ postgres -k $PGHOST > postgres.log &
 sleep 2
 
 # set up postgres to know about local temp directory
-sudo -H -u travis psql postgres -c "CREATE TABLESPACE temp_disk LOCATION '${PGTEMP_DIR}';"
-sudo -H -u travis psql postgres -c "SET temp_tablespaces TO 'temp_disk';"
+psql postgres -c "CREATE TABLESPACE temp_disk LOCATION '${PGTEMP_DIR}';"
+psql postgres -c "SET temp_tablespaces TO 'temp_disk';"
 
 # create postgis enabled db
 ./mason_packages/.link/bin/createdb template_postgis -T postgres
-sudo -H -u travis psql template_postgis -c "CREATE EXTENSION postgis;"
-sudo -H -u travis psql template_postgis -c "SELECT PostGIS_Full_Version();"
+psql template_postgis -c "CREATE EXTENSION postgis;"
+psql template_postgis -c "SELECT PostGIS_Full_Version();"
 
 # stop db when you are done
 # you'll only need the 'source' below if you run this from a new terminal
