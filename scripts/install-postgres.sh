@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -e -u
 
+git clone https://github.com/mapbox/mason.git ~/.mason
+whoami
+sudo chown travis:travis /usr/local/bin
+ln -s ~/.mason/mason /usr/local/bin/mason
+
 PLATFORM=$(uname -s | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/")
 if [ $PLATFORM == "linux" ]; then
     sudo apt-get install clang-3.3
