@@ -32,6 +32,6 @@ before_script:
  - npm ls
 
 script:
- - ./scripts/install_postgres.sh
+ - sudo ./scripts/install-postgres.sh
  - source mason-config.env
  - npm test
