@@ -1,12 +1,11 @@
 view = Backbone.View.extend();
 
 view.prototype.events = {
-    'click a.upload': 'upload',
-    'click a.download': 'download'
+    'click a.upload': 'upload'
 };
 
 view.prototype.initialize = function(options) {
-    _(this).bindAll('render', 'download');
+    _(this).bindAll('render');
 
     Bones.utils.fetch({
         preview: new models.Preview({id:this.model.get('filename')}),
@@ -64,7 +63,6 @@ view.prototype.upload = function(ev) {
 };
 
 view.prototype.download = function(ev) {
-    ev.preventDefault();
     if (typeof process === 'undefined') return;
     if (typeof process.versions['atom-shell'] === undefined) return;
     var uri = url.parse($(ev.currentTarget).attr('href'));

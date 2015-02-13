@@ -2,12 +2,11 @@ view = Backbone.View.extend();
 
 view.prototype.events = {
     'click a.delete': 'exportDelete',
-    'click a.preview': 'exportPreview',
-    'click a.download': 'download'
+    'click a.preview': 'exportPreview'
 };
 
 view.prototype.initialize = function(options) {
-    _(this).bindAll('render', 'exportDelete', 'exportPreview', 'poll', 'download');
+    _(this).bindAll('render', 'exportDelete', 'exportPreview', 'poll');
     this.collection.bind('all', this.render);
     this.collection.bind('all', this.poll);
     this.render(true).poll();
@@ -87,53 +86,5 @@ view.prototype.poll = function() {
     } else if (!active && Bones.intervals.exports) {
         clearInterval(Bones.intervals.exports);
         Bones.intervals.exports = null;
-    }
-};
-
-
-view.prototype.download = function(ev) {
-    ev.preventDefault();
-    if (typeof process === 'undefined') return;
-    if (typeof process.versions['atom-shell'] === undefined) return;
-    var uri = url.parse($(ev.currentTarget).attr('href'));
-        // Opening external URLs.
-    if (uri.hostname && uri.hostname !== 'localhost') {
-        shell.openExternal(ev.currentTarget.href);
-        return false;
-    }
-    // File saving.
-    var fileTypes = {
-        mbtiles: 'Tiles',
-        png: 'Image',
-        jpg: 'Image',
-        jpeg: 'Image',
-        tiff: 'Tiff',
-        webp: 'WebP',
-        pdf: 'PDF',
-        svg: 'SVG',
-        xml: 'Mapnik XML'
-    };
-
-    var typeExtension = (uri.pathname || '').split('.').pop().toLowerCase();
-    var typeLabel = fileTypes[typeExtension];
-
-    if (typeLabel) {
-        var filePath = remote.require('dialog').showSaveDialog({
-            title: 'Save ' + typeLabel,
-            defaultPath: '~/Untitled ' + typeLabel + '.' + typeExtension,
-            filters: [{
-                name: typeExtension.toUpperCase(),
-                extensions: [typeExtension]
-            }]
-        });
-        if (filePath) {
-            var writeStream = fs.createWriteStream(filePath);
-            var req = http.request(uri, function(res) {
-                if (res.statusCode !== 200) return;
-                res.pipe(writeStream);
-            });
-            req.end();
-        }
-        return false;
     }
 };

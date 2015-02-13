@@ -89,7 +89,6 @@ BUILD_PLATFORM=$platform TARGET_ARCH=$arch npm install --production \
 --target_arch=$arch \
 --fallback-to-build=false $extra_install_args
 
-
 cd /tmp
 
 # win32: installer using nsis
@@ -189,6 +188,7 @@ elif [ $platform == "darwin" ]; then
     rm -f $build_dir.zip
 # linux: zip up
 else
+    mv $build_dir/atom $build_dir/TileMill
     zip -qr -9 $build_dir.zip $(basename $build_dir)
     rm -rf $build_dir
     aws s3 cp --acl=public-read $build_dir.zip $s3dest/
