@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e -u
+set -eu
 
 git clone https://github.com/mapbox/mason.git ~/.mason
 
@@ -47,7 +47,3 @@ psql postgres -c "SET temp_tablespaces TO 'temp_disk';"
 ./mason_packages/.link/bin/createdb template_postgis -T postgres
 psql template_postgis -c "CREATE EXTENSION postgis;"
 psql template_postgis -c "SELECT PostGIS_Full_Version();"
-ll only need the 'source' below if you run this from a new terminal
-
-# for more usage tips see the tests at:
-# https://github.com/mapbox/mason/blob/postgis-2.1.5/test.sh

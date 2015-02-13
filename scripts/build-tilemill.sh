@@ -23,7 +23,7 @@ fi
 s3dest="s3://mapbox/tilemill/build"
 NODE_VERSION="0.10.33"
 date_time=`date +%Y%m%d%H%M`
-ATOM_VERSION="0.21.2"
+ATOM_VERSION="0.21.1"
 
 atom_arch=$arch
 arch_common_name=$arch
@@ -68,10 +68,10 @@ curl -Lsfo $shell_file $shell_url
 unzip -qq $shell_file -d $build_dir
 rm $shell_file
 
-echo "downloading atom"
+echo "downloading tilemill"
 git clone https://github.com/mapbox/tilemill.git $app_dir
 cd $app_dir
-git checkout atom
+git checkout $gitsha
 rm -rf $app_dir/.git
 
 echo "updating license"
