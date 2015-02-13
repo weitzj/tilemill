@@ -2,7 +2,7 @@
 set -e -u
 
 git clone https://github.com/mapbox/mason.git ~/.mason
-ln -s ~/.mason/mason /usr/local/bin/mason
+sudo ln -s ~/.mason/mason /usr/local/bin/mason
 
 # setup config
 echo 'export PGDATA=$(pwd)/local-postgres' > mason-config.env

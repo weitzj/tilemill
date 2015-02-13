@@ -4,9 +4,7 @@ var redirect = require('../lib/redirect.js');
 var defaults = models.Config.defaults;
 var command = commands['start'];
 var crashutil = require('../lib/crashutil');
-// we can drop this when we drop support for ubuntu lucid/maverick/natty
-// https://github.com/mapbox/tilemill/issues/1244
-var ubuntu_gui_workaround = require('../lib/ubuntu_gui_workaround');
+var logger = require('fastlog')('', 'debug', '<${timestamp}>');
 
 command.options['server'] = {
     'title': 'server=1|0',
