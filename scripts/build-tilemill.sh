@@ -89,6 +89,24 @@ BUILD_PLATFORM=$platform TARGET_ARCH=$arch npm install --production \
 --target_arch=$arch \
 --fallback-to-build=false $extra_install_args
 
+rm \
+    node_modules/backbone/raw/._destroy.psd \
+    node_modules/backbone/test/._model.coffee \
+    node_modules/backbone/test/._sync.js \
+    node_modules/backbone/raw/._todos.psd \
+    node_modules/backbone/._.DS_Store \
+    node_modules/backbone/._LICENSE \
+    node_modules/backbone/test/vendor/._json2.js \
+    node_modules/backbone/raw/._background.psd \
+    node_modules/backbone/._.gitignore \
+    node_modules/backbone/._README \
+    node_modules/backbone/examples/todos/._todos.css \
+    node_modules/backbone/docs/._.DS_Store \
+    node_modules/backbone/test/._events.js \
+    node_modules/backbone/raw/._backbone.psd \
+    node_modules/backbone/docs/images/._backbone.png \
+    node_modules/backbone/raw/._arrows.psd
+
 cd /tmp
 
 # win32: installer using nsis
