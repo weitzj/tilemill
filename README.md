@@ -36,12 +36,23 @@ To install from source just do:
 
 Then to start TileMill do:
 
-    ./index.js # and then view http://localhost:20009 in your web browser
+    ./index-server.js # and then view http://localhost:20009 in your web browser
 
 For more extended details follow:
 
 - [Install packages](http://mapbox.com/tilemill/docs/install/)
 - [Build from source](http://mapbox.com/tilemill/docs/source/)
+
+### Running atom-shell locally
+
+TileMill uses [atom-shell](https://github.com/atom/atom-shell) as an app wrapper. To work with TileMill and atom-shell locally:
+
+1. [Download atom shell](https://github.com/atom/atom-shell/releases)
+2. Unzip and move Atom.app/Atom.exe somewhere
+3. Then run:
+ * On windows: `$ .\atom-shell\atom.exe path\to\tilemill`
+ * On Linux: `$ ./atom-shell/atom path/to/tilemill`
+ * On OSX: `$ ./Atom.app/Contents/MacOS/Atom path/to/tilemill`
 
 # Running tests
 
