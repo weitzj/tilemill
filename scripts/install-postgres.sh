@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 set -eu
 
-git clone https://github.com/mapbox/mason.git ~/.mason
+if [ ! -d ~/.mason/ ]; then
+    git clone https://github.com/mapbox/mason.git ~/.mason
+fi
 
 PLATFORM=$(uname -s | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/")
 if [ $PLATFORM == "linux" ]; then
-    sudo chown travis:travis /usr/local/bin
     sudo apt-get install clang-3.3
 fi
-
-ln -s ~/.mason/mason /usr/local/bin/mason
 
 # setup config
 echo 'export PGDATA=$(pwd)/local-postgres' > mason-config.env
@@ -26,9 +25,9 @@ source mason-config.env
 ~/.mason/mason build postgis 2.1.5
 ~/.mason/mason link postgres 9.4.0
 
-# do once: create directories to hold postgres data
-mkdir ${PGTEMP_DIR}
-mkdir ${PGHOST}
+# # do once: create directories to hold postgres data
+mkdir -p ${PGTEMP_DIR}
+mkdir -p ${PGHOST}
 
 # do once: initialize local db cluster
 ./mason_packages/.link/bin/initdb -D $PGDATA
@@ -36,14 +35,14 @@ sleep 2
 
 # do each time you use this local postgis:
 # start server and background (NOTE: hit return to fully background and get your prompt back)
-postgres -k $PGHOST > postgres.log &
+./mason_packages/.link/bin/postgres -k $PGHOST > postgres.log &
 sleep 2
 
 # set up postgres to know about local temp directory
-psql postgres -c "CREATE TABLESPACE temp_disk LOCATION '${PGTEMP_DIR}';"
-psql postgres -c "SET temp_tablespaces TO 'temp_disk';"
+./mason_packages/.link/bin/psql postgres -c "CREATE TABLESPACE temp_disk LOCATION '${PGTEMP_DIR}';"
+./mason_packages/.link/bin/psql postgres -c "SET temp_tablespaces TO 'temp_disk';"
 
 # create postgis enabled db
 ./mason_packages/.link/bin/createdb template_postgis -T postgres
-psql template_postgis -c "CREATE EXTENSION postgis;"
-psql template_postgis -c "SELECT PostGIS_Full_Version();"
+./mason_packages/.link/bin/psql template_postgis -c "CREATE EXTENSION postgis;"
+./mason_packages/.link/bin/psql template_postgis -c "SELECT PostGIS_Full_Version();"

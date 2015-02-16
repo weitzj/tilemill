@@ -59,6 +59,14 @@ If you do not have a `template_postgis` create one like:
     createdb -E UTF8 template_postgis
     psql -c "CREATE EXTENSION postgis" template_postgis
 
+If you do not have postgis or postgres, you can run:
+
+```
+./scripts/install-postgres.sh
+```
+
+to start a local setup of postgis/postgres.
+
 If you experience failing tests here are two tips:
 
 1. Debug the project data by running TileMill with
