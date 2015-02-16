@@ -1,6 +1,6 @@
 {
     "name": "tilemill",
-    "version": "0.10.1",
+    "version": "0.11.0",
     "main": "./index.js",
     "description": "A modern map design studio.",
     "keywords": ["map", "design", "cartography"],
@@ -65,7 +65,7 @@
     },
     "scripts": {
         "preinstall": "node scripts/run.js scripts/vendor-node.sh",
-        "start": "./index.js",
+        "start": "./index-server.js",
         "test": "mocha --timeout 100000",
         "postinstall": "node ./lib/gitutil.js"
     },

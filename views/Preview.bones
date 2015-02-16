@@ -25,6 +25,7 @@ view.prototype.render = function() {
     }));
 
     if (!MM) throw new Error('ModestMaps not found.');
+    this.preview.attributes.scheme = 'tms';
     this.map = new MM.Map('preview',
         new wax.mm.connector(this.preview.attributes));
     wax.mm.interaction()

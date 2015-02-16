@@ -21,7 +21,7 @@ function start(id, callback) {
         if (err || data.status !== 'waiting') return callback();
 
         var args = [];
-        // tilemill index.js
+        // tilemill index-server.js
         args.push(path.resolve(path.join(__dirname, '../index-server.js')));
         // export command
         args.push('export');
