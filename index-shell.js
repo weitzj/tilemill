@@ -4,12 +4,25 @@ var spawn = require('child_process').spawn;
 var BrowserWindow = require('browser-window');
 var Menu = require('menu');
 var shell = require('shell');
+var dialog = require('dialog');
 var node = path.resolve(path.join(__dirname, 'vendor', 'node'));
 var exec = require('child_process').exec;
 var script = path.resolve(path.join(__dirname, 'index-server.js'));
 var logger = require('fastlog')('', 'debug', '<${timestamp}>');
+var autoUpdater = require('auto-updater');
 var serverPort = 20009;
 var mainWindow = null;
+
+autoUpdater.setFeedUrl('https://s3.amazonaws.com/mapbox/tilemill/build/latest.json');
+autoUpdater
+    .on('checking-for-update', function(){console.log('Checking for update');})
+    .on('update-available', function(){console.log('Update available');})
+    .on('update-not-available', function(){console.log('Update not available');})
+    .on('update-downloaded', function(){console.log('Update downloaded');})
+    .on('error', function(e){
+        console.log('errors: ' + JSON.stringify(e));
+    })
+    .checkForUpdates();
 
 if (process.platform === 'win32') {
     // HOME is undefined on windows
@@ -100,6 +113,10 @@ function createMenu() {
           {
             label: 'About TileMill',
             selector: 'orderFrontStandardAboutPanel:'
+          },
+          {
+            label: 'Check For Updates',
+            click: function() { autoUpdater.checkForUpdates() }
           },
           {
             type: 'separator'
