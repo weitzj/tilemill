@@ -56,7 +56,9 @@
         "optimist": "~0.6.0",
         "mkdirp": "~0.5.0",
         "mapbox-upload": "~3.0.0",
-        "fastlog": "1.0.0"
+        "fastlog": "1.0.0",
+        "through": "2.3.x",
+        "log-rotate": "0.2.x"
     },
     "devDependencies": {
         "jshint": "0.2.x",
@@ -65,7 +67,7 @@
     },
     "scripts": {
         "preinstall": "node scripts/run.js scripts/vendor-node.sh",
-        "start": "./index-server.js",
+        "start": "./index.js",
         "test": "mocha --timeout 100000",
         "postinstall": "node ./lib/gitutil.js"
     },

@@ -1,29 +1,18 @@
 var atom = require('app');
-var path = require('path');
 var spawn = require('child_process').spawn;
 var BrowserWindow = require('browser-window');
 var Menu = require('menu');
 var shell = require('shell');
 var dialog = require('dialog');
+var autoUpdater = require('auto-updater');
+var path = require('path');
+var log = require('./lib/log');
 var node = path.resolve(path.join(__dirname, 'vendor', 'node'));
 var exec = require('child_process').exec;
 var script = path.resolve(path.join(__dirname, 'index-server.js'));
 var logger = require('fastlog')('', 'debug', '<${timestamp}>');
-var autoUpdater = require('auto-updater');
 var serverPort = 20009;
 var mainWindow = null;
-
-autoUpdater.setFeedUrl('https://s3.amazonaws.com/mapbox/tilemill/build/latest.json');
-autoUpdater
-    .on('checking-for-update', function(){console.log('Checking for update');})
-    .on('update-available', function(){console.log('Update available');})
-    .on('update-not-available', function(){console.log('Update not available');})
-    .on('update-downloaded', function(){
-        autoUpdater.quitAndInstall();
-    })
-    .on('error', function(e){
-        console.log('errors: ' + JSON.stringify(e));
-    })
 
 if (process.platform === 'win32') {
     // HOME is undefined on windows
@@ -32,7 +21,7 @@ if (process.platform === 'win32') {
     shellsetup();
 } else {
     var shellLog = path.join(process.env.HOME, '.tilemill', 'shell.log');
-    shellsetup()
+    log(shellLog, 10e6, shellsetup);
 }
 
 function shellsetup(err){
@@ -62,6 +51,50 @@ function shellsetup(err){
         process.exit();
     };
 
+    autoUpdater.setFeedUrl('http://localhost:8888/latest/tilemill/' + atom.getVersion());
+    console.log('http://localhost:8888/latest/tilemill/' + atom.getVersion())
+    autoUpdater
+        .on('checking-for-update', function() {
+            logger.debug('Checking for update');
+        })
+        .on('update-not-available', function(e) {
+            logger.debug('No update available')
+            dialog.showMessageBox({
+                type: 'info',
+                buttons: ['OK'],
+                message: 'No update available.',
+                title: 'No Update Available',
+                detail: 'Version ' + atom.getVersion() + ' is the latest version.'
+            });
+        })
+        .on('update-available', function(e, b) {
+            logger.debug('Update available')
+            dialog.showMessageBox({
+                type: 'info',
+                buttons: ['Install', 'Cancel'],
+                message: 'Update available',
+                title: 'Update Available',
+                detail: 'An update is available. Would you like to download and install? TileMill will download in the background and automatically restart after it has downloaded.',
+            }, function(e) {
+                if (e === 0) {
+                    autoUpdater.on('update-downloaded', function() {
+                        dialog.showMessageBox({
+                            type: 'info',
+                            buttons: ['OK'],
+                            message: 'Ready to install',
+                            title: 'Ready to install',
+                            detail: 'TileMill will now quit and install update.'
+                        }, function(){
+                            autoUpdater.quitAndInstall();
+                        });
+                    });
+                }
+            });
+        })
+        .on('error', function(e) {
+            console.log(e);
+        });
+
     atom.on('ready', makeWindow);
 };
 
@@ -81,7 +114,9 @@ function makeWindow() {
             'webaudio': false
         }
     });
+
     mainWindow.loadUrl('file://' + path.join(__dirname, 'templates', 'loading.html'));
+
     // Emitted when the window is closed.
     mainWindow.on('closed', function() {
         // Dereference the window object, usually you would store windows
@@ -117,7 +152,7 @@ function createMenu() {
           },
           {
             label: 'Check For Updates',
-            click: function() { autoUpdater.checkForUpdates() }
+            click: function() { autoUpdater.checkForUpdates(); }
           },
           {
             type: 'separator'
@@ -215,7 +250,7 @@ function createMenu() {
             label: 'Application Log',
             click: function() {
                 var cp = require("child_process");
-                cp.exec("open -a /Applications/Utilities/Console.app ~/.tilemill/app.log");
+                cp.exec("open -a /Applications/Utilities/Console.app ~/Library/Logs/TileMill.log");
             }
           },
           {
