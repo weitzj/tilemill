@@ -18,11 +18,12 @@ autoUpdater
     .on('checking-for-update', function(){console.log('Checking for update');})
     .on('update-available', function(){console.log('Update available');})
     .on('update-not-available', function(){console.log('Update not available');})
-    .on('update-downloaded', function(){console.log('Update downloaded');})
+    .on('update-downloaded', function(){
+        autoUpdater.quitAndInstall();
+    })
     .on('error', function(e){
         console.log('errors: ' + JSON.stringify(e));
     })
-    .checkForUpdates();
 
 if (process.platform === 'win32') {
     // HOME is undefined on windows
