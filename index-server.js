@@ -36,6 +36,10 @@ if (existsSync(config)) {
 
 require('tilelive-mapnik').registerProtocols(require('tilelive'));
 require('mbtiles').registerProtocols(require('tilelive'));
-
 require('bones').load(__dirname);
-!module.parent && require('bones').start();
+
+if(!process.env.noshell) {
+    require('bones').start();
+} else {
+    !module.parent && require('bones').start();
+}

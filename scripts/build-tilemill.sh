@@ -214,11 +214,12 @@ else
     rm -f $build_dir.zip
 fi
 
-if [ "$ver" ==  "$(echo $gitsha | tr -d v)" ]; then
-    echo $ver > latest
-    aws s3 cp --acl=public-read latest $s3dest/latest
+if [ "$ver" ==  "$(echo $gitsha | tr -d v)" && "$platform" == "darwin" ]; then
+    datetime=`date`
+    echo '{ "url": "https://s3.amazonaws.com/mapbox/tilemill/build/tilemill-darwin-x64-atom.zip", "notes": "", "name": $ver, "pub_date": $datetime }' > latest.json
+    aws s3 cp --acl=public-read latest.json $s3dest/latest.json
     rm -f latest
-    echo "Latest build version at $s3dest/latest"
+    echo "Latest build version at $s3dest/latest.json"
 fi
 
 cd $cwd
