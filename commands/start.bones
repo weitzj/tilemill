@@ -101,7 +101,7 @@ command.prototype.initialize = function(plugin, callback) {
 
 command.prototype.child = function(name) {
     Bones.plugin.children[name] = spawn(process.execPath, [
-        path.resolve(path.join(__dirname + '/../index-server.js')),
+        path.resolve(path.join(__dirname + '/../index-run-server.js')),
         name
     ].concat(args));
 
