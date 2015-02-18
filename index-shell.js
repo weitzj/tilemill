@@ -11,7 +11,7 @@ var node = path.resolve(path.join(__dirname, 'vendor', 'node'));
 var exec = require('child_process').exec;
 var script = path.resolve(path.join(__dirname, 'index-server.js'));
 var logger = require('fastlog')('', 'debug', '<${timestamp}>');
-var serverPort = 20009;
+var serverPort = null;
 var mainWindow = null;
 
 if (process.platform === 'win32') {
@@ -34,9 +34,10 @@ function shellsetup(err){
     server.on('exit', exit);
 
     server.stdout.once('data', function(data) {
-        var matches = data.toString().match(/start atom/);
-        if (matches) { loadURL(); }
+        var matches = data.toString().match(/^startatom&*?/);
         if (!matches) { exit(); }
+        serverPort = data.toString().split('&')[1];
+        if (matches) { loadURL(); }
         logger.debug('TileMill @ http://localhost:' + serverPort + '/');
     });
 

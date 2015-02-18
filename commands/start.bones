@@ -34,6 +34,8 @@ command.prototype.initialize = function(plugin, callback) {
     // window at the right URL.
     plugin.config.coreUrl = plugin.config.coreUrl ||
         '127.0.0.1:' + plugin.config.port;
+    process.env.port = plugin.config.port;
+
 
     // Set proxy env variable before spawning children
     if (plugin.config.httpProxy) process.env.HTTP_PROXY = plugin.config.httpProxy;
@@ -91,7 +93,7 @@ command.prototype.initialize = function(plugin, callback) {
             'cache-path': path.join(process.env.HOME, '.tilemill/cache-cefclient'),
             'log-file': path.join(process.env.HOME, '.tilemill/cefclient.log')
         };
-        if (d.toString().match(/Started \[Server Core:\d+\]./)) console.log('start atom');
+        if (d.toString().match(/Started \[Server Core:\d+\]./)) console.log('startatom&20009');
     });
 
     callback && callback();

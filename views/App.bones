@@ -103,7 +103,7 @@ view.prototype.events = {
     'click .toggler a': 'toggler',
     'click a.restart': 'restart',
     'keydown': 'keydown',
-    'click a.download': 'download'
+    'click a': 'download',
 };
 
 view.prototype.initialize = function() {
@@ -268,8 +268,10 @@ view.prototype.restart = function(ev) {
 view.prototype.download = function(ev) {
     if (typeof process === 'undefined') return;
     if (typeof process.versions['atom-shell'] === undefined) return;
+
     var uri = url.parse($(ev.currentTarget).attr('href'));
-        // Opening external URLs.
+
+    // Opening external URLs.
     if (uri.hostname && uri.hostname !== 'localhost') {
         shell.openExternal(ev.currentTarget.href);
         return false;
