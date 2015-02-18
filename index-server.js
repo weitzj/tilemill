@@ -38,4 +38,4 @@ require('tilelive-mapnik').registerProtocols(require('tilelive'));
 require('mbtiles').registerProtocols(require('tilelive'));
 
 require('bones').load(__dirname);
-require('bones').start();
+!module.parent && require('bones').start();

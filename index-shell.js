@@ -51,8 +51,7 @@ function shellsetup(err){
         process.exit();
     };
 
-    autoUpdater.setFeedUrl('http://localhost:8888/latest/tilemill/' + atom.getVersion());
-    console.log('http://localhost:8888/latest/tilemill/' + atom.getVersion())
+    autoUpdater.setFeedUrl('https://s3.amazonaws.com/mapbox/tilemill/build/latest.json');
     autoUpdater
         .on('checking-for-update', function() {
             logger.debug('Checking for update');
@@ -85,6 +84,7 @@ function shellsetup(err){
                             title: 'Ready to install',
                             detail: 'TileMill will now quit and install update.'
                         }, function(){
+                            server.kill();
                             autoUpdater.quitAndInstall();
                         });
                     });
@@ -92,7 +92,7 @@ function shellsetup(err){
             });
         })
         .on('error', function(e) {
-            console.log(e);
+            logger.debug(e);
         });
 
     atom.on('ready', makeWindow);
