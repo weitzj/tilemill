@@ -4,7 +4,6 @@ var BrowserWindow = require('browser-window');
 var Menu = require('menu');
 var shell = require('shell');
 var dialog = require('dialog');
-var autoUpdater = require('auto-updater');
 var path = require('path');
 var log = require('./lib/log');
 var node = path.resolve(path.join(__dirname, 'vendor', 'node'));
@@ -51,50 +50,6 @@ function shellsetup(err){
         if (server) server.kill();
         process.exit();
     };
-
-    autoUpdater.setFeedUrl('https://s3.amazonaws.com/mapbox/tilemill/build/latest.json');
-    autoUpdater
-        .on('checking-for-update', function() {
-            logger.debug('Checking for update');
-        })
-        .on('update-not-available', function(e) {
-            logger.debug('No update available')
-            dialog.showMessageBox({
-                type: 'info',
-                buttons: ['OK'],
-                message: 'No update available.',
-                title: 'No Update Available',
-                detail: 'Version ' + atom.getVersion() + ' is the latest version.'
-            });
-        })
-        .on('update-available', function(e, b) {
-            logger.debug('Update available')
-            dialog.showMessageBox({
-                type: 'info',
-                buttons: ['Install', 'Cancel'],
-                message: 'Update available',
-                title: 'Update Available',
-                detail: 'An update is available. Would you like to download and install? TileMill will download in the background and automatically restart after it has downloaded.',
-            }, function(e) {
-                if (e === 0) {
-                    autoUpdater.on('update-downloaded', function() {
-                        dialog.showMessageBox({
-                            type: 'info',
-                            buttons: ['OK'],
-                            message: 'Ready to install',
-                            title: 'Ready to install',
-                            detail: 'TileMill will now quit and install update.'
-                        }, function(){
-                            server.kill();
-                            autoUpdater.quitAndInstall();
-                        });
-                    });
-                }
-            });
-        })
-        .on('error', function(e) {
-            logger.debug(e);
-        });
 
     atom.on('ready', makeWindow);
 };
@@ -150,10 +105,6 @@ function createMenu() {
           {
             label: 'About TileMill',
             selector: 'orderFrontStandardAboutPanel:'
-          },
-          {
-            label: 'Check For Updates',
-            click: function() { autoUpdater.checkForUpdates(); }
           },
           {
             type: 'separator'

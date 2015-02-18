@@ -10,8 +10,7 @@ controller.prototype.initialize = function() {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            if (window.abilities.platform === 'darwin') return;
-            if (!data.updates) return;
+            if (!data || !data.updates) return;
             if (!semver.gt(data.updatesVersion,
                     window.abilities.tilemill.version)) return;
             new views.Modal({
