@@ -4,9 +4,7 @@ var redirect = require('../lib/redirect.js');
 var defaults = models.Config.defaults;
 var command = commands['start'];
 var crashutil = require('../lib/crashutil');
-// we can drop this when we drop support for ubuntu lucid/maverick/natty
-// https://github.com/mapbox/tilemill/issues/1244
-var ubuntu_gui_workaround = require('../lib/ubuntu_gui_workaround');
+var logger = require('fastlog')('', 'debug', '<${timestamp}>');
 
 command.options['server'] = {
     'title': 'server=1|0',
@@ -36,6 +34,8 @@ command.prototype.initialize = function(plugin, callback) {
     // window at the right URL.
     plugin.config.coreUrl = plugin.config.coreUrl ||
         '127.0.0.1:' + plugin.config.port;
+    process.env.port = plugin.config.port;
+
 
     // Set proxy env variable before spawning children
     if (plugin.config.httpProxy) process.env.HTTP_PROXY = plugin.config.httpProxy;
@@ -93,21 +93,7 @@ command.prototype.initialize = function(plugin, callback) {
             'cache-path': path.join(process.env.HOME, '.tilemill/cache-cefclient'),
             'log-file': path.join(process.env.HOME, '.tilemill/cefclient.log')
         };
-        ubuntu_gui_workaround.check(function(needed) {
-            try {
-              if (needed) {
-                  client = ubuntu_gui_workaround.get_client(options);
-              } else {
-                  client = require('topcube')(options);
-              }
-              if (client) {
-                  console.warn('[tilemill] Client window created (pass --server=true to disable this)');
-                  plugin.children['client'] = client;
-              }
-            } catch (err) {
-              console.warn('[tilemill] Unable to open client window (' + err.message + ')');
-            }
-        });
+        if (d.toString().match(/Started \[Server Core:\d+\]./)) console.log('startatom@20009');
     });
 
     callback && callback();
@@ -115,7 +101,7 @@ command.prototype.initialize = function(plugin, callback) {
 
 command.prototype.child = function(name) {
     Bones.plugin.children[name] = spawn(process.execPath, [
-        path.resolve(path.join(__dirname + '/../index.js')),
+        path.resolve(path.join(__dirname + '/../index-run-server.js')),
         name
     ].concat(args));
 
