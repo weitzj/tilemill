@@ -138,12 +138,12 @@ server.prototype.updatesVersion = function(req, res, next) {
     var skip = !settings.updates || (settings.updatesTime > Date.now() - 864e5);
     if (skip) return next(new Error.HTTP(204));
 
-    request('https://s3.amazonaws.com/mapbox/tilemill/build/latest.json', function (error, response, body) {
+    request('https://s3.amazonaws.com/mapbox/tilemill/build/latest', function (error, response, version) {
         if (error) return next(new Error.HTTP(error));
         if (response.statusCode !== 200) return next(new Error.HTTP(response.statusCode));
         res.send({
             updates: settings.updates,
-            updatesVersion: JSON.parse(body).name || settings.updatesVersion
+            updatesVersion: version || settings.updatesVersion
         });
     });
 }

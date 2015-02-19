@@ -33,9 +33,9 @@ function shellsetup(err){
     server.on('exit', exit);
 
     server.stdout.once('data', function(data) {
-        var matches = data.toString().match(/^startatom&*?/);
+        var matches = data.toString().match(/^startatom@*?/);
         if (!matches) { exit(); }
-        serverPort = data.toString().split('&')[1];
+        serverPort = data.toString().split('@')[1];
         if (matches) { loadURL(); }
         logger.debug('TileMill @ http://localhost:' + serverPort + '/');
     });

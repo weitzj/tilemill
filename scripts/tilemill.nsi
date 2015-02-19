@@ -19,7 +19,7 @@ SetCompressorDictSize 64
 Var PREV_VER_DIR
 ; parent directory of install
 Var PAR_DIR
-!define PRODUCT_DIR "tilemill"
+!define PRODUCT_DIR "TileMill"
 !define PRODUCT_NAME "TileMill"
 !define PRODUCT_VERSION "${VERSION}"
 !define PRODUCT_PUBLISHER "Mapbox"

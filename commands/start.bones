@@ -93,7 +93,7 @@ command.prototype.initialize = function(plugin, callback) {
             'cache-path': path.join(process.env.HOME, '.tilemill/cache-cefclient'),
             'log-file': path.join(process.env.HOME, '.tilemill/cefclient.log')
         };
-        if (d.toString().match(/Started \[Server Core:\d+\]./)) console.log('startatom&20009');
+        if (d.toString().match(/Started \[Server Core:\d+\]./)) console.log('startatom@20009');
     });
 
     callback && callback();

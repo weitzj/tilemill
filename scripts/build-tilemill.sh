@@ -216,7 +216,7 @@ fi
 
 if [ "$ver" ==  "$(echo $gitsha | tr -d v)" && "$platform" == "darwin" ]; then
     datetime=`date`
-    echo '{ "url": "https://s3.amazonaws.com/mapbox/tilemill/build/tilemill-darwin-x64-$gitsha.zip", "notes": "", "name": $ver, "pub_date": $datetime }' > latest.json
+    echo $ver > latest
     aws s3 cp --acl=public-read latest.json $s3dest/latest.json
     rm -f latest
     echo "Latest build version at $s3dest/latest.json"
