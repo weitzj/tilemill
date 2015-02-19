@@ -2,5 +2,5 @@
 if (process.versions['atom-shell']) {
     require('./index-shell');
 } else {
-    require('./index-run-server');
+    require('./index-server');
 }
