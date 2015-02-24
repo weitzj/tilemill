@@ -6,17 +6,15 @@ var shell = require('shell');
 var dialog = require('dialog');
 var path = require('path');
 var log = require('./lib/log');
+var logger = require('fastlog')('', 'debug', '<${timestamp}>');
 var node = path.resolve(path.join(__dirname, 'vendor', 'node'));
 var exec = require('child_process').exec;
 var script = path.resolve(path.join(__dirname, 'index-server.js'));
-var logger = require('fastlog')('', 'debug', '<${timestamp}>');
 var serverPort = null;
 var mainWindow = null;
 
 if (process.platform === 'win32') {
-    // HOME is undefined on windows
     process.env.HOME = process.env.USERPROFILE;
-    // skill shell.log setup
     shellsetup();
 } else {
     var shellLog = path.join(process.env.HOME, '.tilemill', 'shell.log');
@@ -37,7 +35,7 @@ function shellsetup(err){
         if (!matches) { exit(); }
         serverPort = data.toString().split('@')[1];
         if (matches) { loadURL(); }
-        logger.debug('TileMill @ http://localhost:' + serverPort + '/');
+        logger.debug('TileMill @ http://localhost:' + serverPort);
     });
 
     // Report crashes to our server.
@@ -47,7 +45,7 @@ function shellsetup(err){
     atom.on('will-quit', exit);
 
    function exit() {
-        if (server) server.kill();
+        if (server) server.kill('SIGINT');
         process.exit();
     };
 
@@ -55,7 +53,6 @@ function shellsetup(err){
 };
 
 function makeWindow() {
-    // Create the browser window.
     mainWindow = new BrowserWindow({
         'width': 1060,
         'height': 700,
@@ -72,15 +69,9 @@ function makeWindow() {
     });
 
     mainWindow.loadUrl('file://' + path.join(__dirname, 'templates', 'loading.html'));
-
-    // Emitted when the window is closed.
     mainWindow.on('closed', function() {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
         mainWindow = null;
     });
-    // Prevent page changes from updating the window title (typically to 'Untitled').
     mainWindow.on('page-title-updated', function(e) {
         e.preventDefault();
     });

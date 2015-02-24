@@ -4,7 +4,6 @@ var redirect = require('../lib/redirect.js');
 var defaults = models.Config.defaults;
 var command = commands['start'];
 var crashutil = require('../lib/crashutil');
-var logger = require('fastlog')('', 'debug', '<${timestamp}>');
 
 command.options['server'] = {
     'title': 'server=1|0',
@@ -34,8 +33,6 @@ command.prototype.initialize = function(plugin, callback) {
     // window at the right URL.
     plugin.config.coreUrl = plugin.config.coreUrl ||
         '127.0.0.1:' + plugin.config.port;
-    process.env.port = plugin.config.port;
-
 
     // Set proxy env variable before spawning children
     if (plugin.config.httpProxy) process.env.HTTP_PROXY = plugin.config.httpProxy;
@@ -52,7 +49,7 @@ command.prototype.initialize = function(plugin, callback) {
     Bones.plugin.children = {};
     process.title = 'tilemill';
     // Kill child processes on exit.
-    process.on('exit', function(code, signal) {
+    process.on('SIGINT', function(code, signal) {
         _(Bones.plugin.children).each(function(child, key) {
             console.warn('[tilemill] Closing child process: ' + key  + " (pid:" + child.pid + ")");
             child.kill();
@@ -106,7 +103,7 @@ command.prototype.child = function(name) {
     ].concat(args));
 
     redirect.onData(Bones.plugin.children[name]);
-    Bones.plugin.children[name].once('exit', function(code, signal) {
+    Bones.plugin.children[name].once('SIGINT', function(code, signal) {
         if (code === 0) {
             // restart server if exit was clean
             console.warn('[tilemill] Restarting child process: "' + name + '"');
