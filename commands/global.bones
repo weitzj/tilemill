@@ -10,19 +10,19 @@ Bones.Command.options['files'] = {
 
 Bones.Command.options['syncURL'] = {
     'title': 'syncURL=[URL]',
-    'description': 'Mapbox sync URL.',
+    'description': 'MapBox sync URL.',
     'default': defaults.syncURL || ''
 };
 
 Bones.Command.options['syncAccount'] = {
     'title': 'syncAccount=[account]',
-    'description': 'Mapbox account name.',
+    'description': 'MapBox account name.',
     'default': defaults.syncAccount || ''
 };
 
 Bones.Command.options['syncAccessToken'] = {
     'title': 'syncAccessToken=[token]',
-    'description': 'Mapbox access token.',
+    'description': 'MapBox access token.',
     'default': defaults.syncAccessToken || ''
 };
 
