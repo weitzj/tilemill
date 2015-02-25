@@ -98,7 +98,7 @@ BUILD_PLATFORM=$platform TARGET_ARCH=$arch npm install --production \
 if [ $platform == "win32" ]; then
     echo "Changing icon"
     if ! which wine > /dev/null; then echo "wine command not found"; exit 1; fi;
-    node -e "var rcedit = require(__dirname + '/node_modules/rcedit'); var atom = '$build_dir/atom.exe'; console.log(atom); var ico = '$app_dir/tilemill.ico'; console.log(ico); var strings = { CompanyName: 'Mapbox, Inc.', FileDescription: 'TileMill', LegalCopyright: 'Copyright (C) 2015 Mapbox, Inc. All rights reserved', ProductName: 'TileMill', ProductVersion: '$ver'}; rcedit(atom, { 'version-string': strings, 'icon': ico }, function(err, res) { if (err); console.log(err); console.log('Done'); });"
+    node -e "var rcedit = require('$app_dir/node_modules/rcedit'); var atom = '$build_dir/atom.exe'; console.log(atom); var ico = '$app_dir/tilemill.ico'; console.log(ico); var strings = { CompanyName: 'Mapbox, Inc.', FileDescription: 'TileMill', LegalCopyright: 'Copyright (C) 2015 Mapbox, Inc. All rights reserved', ProductName: 'TileMill', ProductVersion: '$ver'}; rcedit(atom, { 'version-string': strings, 'icon': ico }, function(err, res) { if (err); console.log(err); console.log('Done'); });"
 fi
 
 rm \
