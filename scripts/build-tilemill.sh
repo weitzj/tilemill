@@ -82,18 +82,16 @@ cp $app_dir/LICENSE.md $build_dir/LICENSE
 mv $build_dir/version $build_dir/version.txt
 mv $build_dir/LICENSE $build_dir/LICENSE.txt
 
-if [ $platform == "win32" ]; then
-    echo "Changing icon"
-    if ! which wine > /dev/null; then echo "wine command not found"; exit 1; fi;
-    node -e "var rcedit = require('rcedit'); var atom = '$build_dir/atom.exe'; console.log(atom); var ico = '$app_dir/tilemill.ico'; console.log(ico); var strings = { CompanyName: 'Mapbox, Inc.', FileDescription: 'TileMill', LegalCopyright: 'Copyright (C) 2015 Mapbox, Inc. All rights reserved', ProductName: 'TileMill', ProductVersion: '$ver'}; rcedit(atom, { 'version-string': strings, 'icon': ico }, function(err, res) { if (err); console.log(err); console.log('Done'); });"
-fi
-
 echo "running npm install"
 BUILD_PLATFORM=$platform TARGET_ARCH=$arch npm install --production \
 --target_platform=$platform \
 --target=$NODE_VERSION \
 --target_arch=$arch \
 --fallback-to-build=false $extra_install_args
+
+ls $app_dir/
+ls $app_dir/node_modules/
+ls $app_dir/node_modules/rcedit
 
 if [ $platform == "win32" ]; then
     echo "Changing icon"
