@@ -89,14 +89,11 @@ BUILD_PLATFORM=$platform TARGET_ARCH=$arch npm install --production \
 --target_arch=$arch \
 --fallback-to-build=false $extra_install_args
 
-ls $app_dir/
-ls $app_dir/node_modules/
-ls $app_dir/node_modules/rcedit
 
 if [ $platform == "win32" ]; then
     echo "Changing icon"
     if ! which wine > /dev/null; then echo "wine command not found"; exit 1; fi;
-    node -e "var rcedit = require('$app_dir/node_modules/rcedit'); var atom = '$build_dir/atom.exe'; console.log(atom); var ico = '$app_dir/tilemill.ico'; console.log(ico); var strings = { CompanyName: 'Mapbox, Inc.', FileDescription: 'TileMill', LegalCopyright: 'Copyright (C) 2015 Mapbox, Inc. All rights reserved', ProductName: 'TileMill', ProductVersion: '$ver'}; rcedit(atom, { 'version-string': strings, 'icon': ico }, function(err, res) { if (err); console.log(err); console.log('Done'); });"
+    node -e "var rcedit = require('$app_dir/node_modules/rcedit'); var atom = '$build_dir/atom.exe'; var ico = '$app_dir/tilemill.ico'; rcedit(atom, { 'icon': ico }, function(err, res) { if (err) console.log(err); console.log('Done'); });"
 fi
 
 rm \
@@ -131,13 +128,13 @@ if [ $platform == "win32" ]; then
     aws s3 cp s3://mapbox/mapbox-studio/certs/authenticode.pvk authenticode.pvk
     aws s3 cp s3://mapbox/mapbox-studio/certs/authenticode.spc authenticode.spc
 
-    echo "running windows signing on TileMill.exe"
-    mv $build_dir/atom.exe $build_dir/TileMill.exe
+    echo "running windows signing on tilemill.exe"
+    mv $build_dir/atom.exe $build_dir/tilemill.exe
     N='TileMill' I='https://www.mapbox.com/' P=$WINCERT_PASSWORD \
     SPC=authenticode.spc PVK=authenticode.pvk \
     windowsign $build_dir/tilemill.exe
 
-    rm $build_dir/TileMill.exe.bak
+    rm $build_dir/tilemill.exe.bak
 
     echo "downloading c++ lib vcredist_$arch_common_name.exe"
     curl -Lfo "$build_dir/resources/app/vendor/vcredist_$arch_common_name.exe" "https://mapbox.s3.amazonaws.com/node-cpp11/vcredist_$arch_common_name.exe"
