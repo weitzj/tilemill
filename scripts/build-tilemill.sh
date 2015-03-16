@@ -89,13 +89,6 @@ BUILD_PLATFORM=$platform TARGET_ARCH=$arch npm install --production \
 --target_arch=$arch \
 --fallback-to-build=false $extra_install_args
 
-
-if [ $platform == "win32" ]; then
-    echo "Changing icon"
-    if ! which wine > /dev/null; then echo "wine command not found"; exit 1; fi;
-    node -e "var rcedit = require('$app_dir/node_modules/rcedit'); var atom = '$build_dir/atom.exe'; var ico = '$app_dir/tilemill.ico'; rcedit(atom, { 'icon': ico }, function(err, res) { if (err) console.log(err); console.log('Done'); });"
-fi
-
 rm \
     node_modules/backbone/raw/._destroy.psd \
     node_modules/backbone/test/._model.coffee \
@@ -123,6 +116,9 @@ if [ $platform == "win32" ]; then
     if ! which expect > /dev/null; then echo "expect command not found"; exit 1; fi;
     if ! which windowsign > /dev/null; then echo "windowsign command not found"; exit 1; fi;
     if ! which wine > /dev/null; then echo "wine command not found"; exit 1; fi;
+
+    echo "Changing icon"
+    node -e "var rcedit = require('$app_dir/node_modules/rcedit'); var atom = '$build_dir/atom.exe'; var ico = '$app_dir/tilemill.ico'; rcedit(atom, { 'icon': ico }, function(err, res) { if (err) console.log(err); console.log('Done'); });"
 
     # windows code signing
     aws s3 cp s3://mapbox/mapbox-studio/certs/authenticode.pvk authenticode.pvk
