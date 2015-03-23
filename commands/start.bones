@@ -4,6 +4,7 @@ var redirect = require('../lib/redirect.js');
 var defaults = models.Config.defaults;
 var command = commands['start'];
 var crashutil = require('../lib/crashutil');
+var logger = require('fastlog')('', 'debug', '<${timestamp}>');
 
 command.options['server'] = {
     'title': 'server=1|0',
