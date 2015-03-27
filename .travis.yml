@@ -30,6 +30,8 @@ install:
 
 before_script:
  - npm ls
+ - pip install --user awscli
+ - export PATH=$PATH:$HOME/.local/bin
 
 script:
  - ./scripts/install-postgres.sh
