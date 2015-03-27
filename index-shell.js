@@ -31,6 +31,19 @@ function shellsetup(err) {
     var server = spawn(node, [script]);
     server.on('exit', process.exit);
 
+    server.stderr.on('data', function(data){
+        var matches = data.toString().match(/Error:/g);
+        if (matches) {
+             var chosen = dialog.showMessageBox(null, {
+                type: 'warning',
+                message: 'There was an error',
+                detail: data.toString() + '\n\n Please report this issue to https://github.com/mapbox/tilemill',
+                buttons: ['Cancel', 'Open a GitHub ticket'],
+            });
+            if(chosen === 1) shell.openExternal('https://github.com/mapbox/tilemill/issues/new?title=Error&body=I encountered an error:' + encodeURIComponent('\n```\n' + data.toString() + '\n```\n'));
+        }
+    });
+
     server.stdout.on('data', function(data) {
         logger.debug(data.toString())
         var matches = data.toString().match(/Started \[Server Core:\d+\]./);
@@ -57,8 +70,9 @@ function shellsetup(err) {
             rl.on('SIGINT', function() {
                 server.emit('SIGINT');
             });
+        } else {
+            if (server) server.kill('SIGINT');
         }
-        if (server) server.kill('SIGINT');
         process.exit();
     };
 
@@ -102,97 +116,118 @@ function createMenu() {
     var template;
 
     if (process.platform == 'darwin') {
-        template = [{
-            label: 'TileMill',
-            submenu: [{
-                label: 'About TileMill',
-                selector: 'orderFrontStandardAboutPanel:'
-            }, {
-                type: 'separator'
-            }, {
-                label: 'Hide TileMill',
-                accelerator: 'Command+H',
-                selector: 'hide:'
-            }, {
-                label: 'Hide Others',
-                accelerator: 'Command+Shift+H',
-                selector: 'hideOtherApplications:'
-            }, {
-                label: 'Show All',
-                selector: 'unhideAllApplications:'
-            }, {
-                type: 'separator'
-            }, {
-                label: 'Quit TileMill',
-                accelerator: 'Command+Q',
-                selector: 'performClose:'
-            }]
-        }, {
-            label: 'Edit',
-            submenu: [{
-                label: 'Cut',
-                accelerator: 'Command+X',
-                selector: 'cut:'
-            }, {
-                label: 'Copy',
-                accelerator: 'Command+C',
-                selector: 'copy:'
-            }, {
-                label: 'Paste',
-                accelerator: 'Command+V',
-                selector: 'paste:'
-            }, {
-                label: 'Select All',
-                accelerator: 'Command+A',
-                selector: 'selectAll:'
-            }]
-        }, {
-            label: 'View',
-            submenu: [{
-                label: 'Reload',
-                accelerator: 'Command+R',
-                click: function() {
-                    mainWindow.restart();
-                }
-            }, {
-                label: 'Toggle Developer Tools',
-                accelerator: 'Alt+Command+I',
-                click: function() {
-                    mainWindow.toggleDevTools();
-                }
-            }, {
-                type: 'separator'
-            }, {
-                label: 'Toggle Full Screen',
-                accelerator: 'Ctrl+Command+F',
-                click: function() {
-                    mainWindow.setFullScreen(!mainWindow.isFullScreen());
-                }
-            }]
-        }, {
-            label: 'Window',
-            submenu: [{
-                label: 'Minimize',
-                accelerator: 'Command+M',
-                selector: 'performMiniaturize:'
-            }]
-        }, {
-            label: 'Help',
-            submenu: [{
-                label: 'Online Resources',
-                click: function() {
-                    shell.openExternal('https://www.mapbox.com/tilemill/');
-                }
-            }, {
-                label: 'TileMill Logs',
-                click: function() {
-                    var cp = require("child_process");
-                    cp.exec("open -a /Applications/Utilities/Console.app ~/.tilemill/tilemill.log");
-                }
-            }]
-        }];
+    template = [
+      {
+        label: 'TileMill',
+        submenu: [
+          {
+            label: 'About TileMill',
+            selector: 'orderFrontStandardAboutPanel:'
+          },
+          {
+            type: 'separator'
+          },
+          {
+            label: 'Hide TileMill',
+            accelerator: 'Command+H',
+            selector: 'hide:'
+          },
+          {
+            label: 'Hide Others',
+            accelerator: 'Command+Shift+H',
+            selector: 'hideOtherApplications:'
+          },
+          {
+            label: 'Show All',
+            selector: 'unhideAllApplications:'
+          },
+          {
+            type: 'separator'
+          },
+          {
+            label: 'Quit TileMill',
+            accelerator: 'Command+Q',
+            selector: 'performClose:'
+          }
+        ]
+      },
+      {
+        label: 'Edit',
+        submenu: [
+          {
+            label: 'Cut',
+            accelerator: 'Command+X',
+            selector: 'cut:'
+          },
+          {
+            label: 'Copy',
+            accelerator: 'Command+C',
+            selector: 'copy:'
+          },
+          {
+            label: 'Paste',
+            accelerator: 'Command+V',
+            selector: 'paste:'
+          },
+          {
+            label: 'Select All',
+            accelerator: 'Command+A',
+            selector: 'selectAll:'
+          }
+        ]
+      },
+      {
+        label: 'View',
+        submenu: [
+          {
+            label: 'Reload',
+            accelerator: 'Command+R',
+            click: function() { mainWindow.restart(); }
+          },
+          {
+            label: 'Toggle Developer Tools',
+            accelerator: 'Alt+Command+I',
+            click: function() { mainWindow.toggleDevTools(); }
+          },
+          {
+            type: 'separator'
+          },
+          {
+            label: 'Toggle Full Screen',
+            accelerator: 'Ctrl+Command+F',
+            click: function() { mainWindow.setFullScreen(!mainWindow.isFullScreen()); }
+          }
+        ]
+      },
+      {
+        label: 'Window',
+        submenu: [
+          {
+            label: 'Minimize',
+            accelerator: 'Command+M',
+            selector: 'performMiniaturize:'
+          }
+        ]
+      },
+      {
+        label: 'Help',
+        submenu: [
+          {
+            label: 'Online Resources',
+            click: function() { shell.openExternal('https://www.mapbox.com/tilemill/'); }
+          },
+          {
+            label: 'TileMill Logs',
+            click: function() {
+                var cp = require("child_process");
+                cp.exec("open -a /Applications/Utilities/Console.app ~/.tilemill/tilemill.log");
+            }
+          }
+        ]
+      }
+    ];
 
-        menu = Menu.buildFromTemplate(template);
-        Menu.setApplicationMenu(menu);
-    }
+    menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+  }
 }
