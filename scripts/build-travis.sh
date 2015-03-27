@@ -18,11 +18,10 @@ if [ $PLATFORM == "linux" ] && [ -n "$GITSHA" ]; then
     ./scripts/build-tilemill.sh "$GITSHA" win32 x64
     ./scripts/build-tilemill.sh "$GITSHA" win32 ia32
 elif [ $PLATFORM == "darwin" ] && [ -n "$GITSHA" ]; then
+    set -x
     echo "Publishing $GITSHA"
-    brew install python
-    brew link --overwrite python
-
-    set -eu
+    # brew install python
+    # brew link --overwrite python
 
     pip install -q awscli
 
