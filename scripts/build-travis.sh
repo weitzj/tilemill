@@ -20,8 +20,9 @@ if [ $PLATFORM == "linux" ] && [ -n "$GITSHA" ]; then
 elif [ $PLATFORM == "darwin" ] && [ -n "$GITSHA" ]; then
     set -x
     echo "Publishing $GITSHA"
-    brew install python
-    pip install -q awscli
+    curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+    unzip awscli-bundle.zip
+    ./awscli-bundle/install -b ~/bin/aws
 
     ./scripts/build-tilemill.sh "$GITSHA" darwin
 fi
