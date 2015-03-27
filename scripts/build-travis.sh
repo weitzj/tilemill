@@ -20,7 +20,7 @@ if [ $PLATFORM == "linux" ] && [ -n "$GITSHA" ]; then
 elif [ $PLATFORM == "darwin" ] && [ -n "$GITSHA" ]; then
     set -x
     echo "Publishing $GITSHA"
-    brew install python
+    # brew install python
     # brew link --overwrite python
 
     # pip install -q awscli

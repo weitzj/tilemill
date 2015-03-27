@@ -30,6 +30,7 @@ install:
 
 before_script:
  - npm ls
+ - sudo apt-get install python-pip
  - pip install --user awscli
  - export PATH=$PATH:$HOME/.local/bin
 
