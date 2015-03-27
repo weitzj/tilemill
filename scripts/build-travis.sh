@@ -19,8 +19,8 @@ if [ $PLATFORM == "linux" ] && [ -n "$GITSHA" ]; then
     ./scripts/build-tilemill.sh "$GITSHA" win32 ia32
 elif [ $PLATFORM == "darwin" ] && [ -n "$GITSHA" ]; then
     echo "Publishing $GITSHA"
-    sudo brew install python
-    sudo brew link --overwrite python
+    brew install python
+    brew link --overwrite python
 
     set -eu
 
