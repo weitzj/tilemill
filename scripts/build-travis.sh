@@ -22,7 +22,7 @@ elif [ $PLATFORM == "darwin" ] && [ -n "$GITSHA" ]; then
     echo "Publishing $GITSHA"
     curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
     sudo python get-pip.py
-    pip install awscli
+    sudo pip install awscli
 
     ./scripts/build-tilemill.sh "$GITSHA" darwin
 fi
