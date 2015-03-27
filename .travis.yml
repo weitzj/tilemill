@@ -16,20 +16,20 @@ env:
   - secure: "lTnK9Jp7nT9VrY2fWrDymp3Ki8lmY8Rbr1gbFLXK7GNSRm5vBkmKGiAhY3XGs0bPE/GgXPKR7JYZcbNWJWyuNlAEblJDv4lzYznyPA/x09oLsRK5oFSpiWfWpTkPy0EqibJBROKXKZISBh8VporJpBEygFTchcAzPnkh5nbTKjE="
 
 before_install:
- - git clone https://github.com/creationix/nvm.git ../.nvm && source ../.nvm/nvm.sh
- - nvm install $NODE_VERSION
- - nvm use $NODE_VERSION
- - node --version
- - npm --version
- - sudo apt-get install python-pip
- - pip install --user awscli
- - export PATH=$PATH:$HOME/.local/bin
- - if [[ $(uname -s) == 'Linux' ]]; then wget https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test/+files/libstdc%2B%2B6_4.8.1-2ubuntu1~12.04_amd64.deb && dpkg -x libstdc++6_4.8.1-2ubuntu1~12.04_amd64.deb ./ && export LD_PRELOAD=$(pwd)/usr/lib/x86_64-linux-gnu/libstdc++.so.6; fi
- - ./scripts/build-travis.sh $TRAVIS_COMMIT
+  - git clone https://github.com/creationix/nvm.git ../.nvm && source ../.nvm/nvm.sh
+  - nvm install $NODE_VERSION
+  - nvm use $NODE_VERSION
+  - node --version
+  - npm --version
+  - if [[ $(uname -s) == 'Linux' ]]; then wget https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test/+files/libstdc%2B%2B6_4.8.1-2ubuntu1~12.04_amd64.deb && dpkg -x libstdc++6_4.8.1-2ubuntu1~12.04_amd64.deb ./ && export LD_PRELOAD=$(pwd)/usr/lib/x86_64-linux-gnu/libstdc++.so.6; fi
+  - ./scripts/build-travis.sh $TRAVIS_COMMIT
 
 install:
-- npm install --fallback-to-build=false
-- python test/check_shared_libs.py node_modules/
+  - npm install --fallback-to-build=false
+  - python test/check_shared_libs.py node_modules/
+
+before_script:
+ - npm ls
 
 script:
  - ./scripts/install-postgres.sh
