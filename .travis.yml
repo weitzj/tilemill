@@ -21,7 +21,6 @@ before_install:
  - nvm use $NODE_VERSION
  - node --version
  - npm --version
- - npm ls
  - sudo apt-get install python-pip
  - pip install --user awscli
  - export PATH=$PATH:$HOME/.local/bin
